@@ -19,7 +19,7 @@ The game that I am making will have a wide target audience, such as:
 
 ### **Why is this project of interest to you?**
 
-Constructing a 2D RPG-style game in Java is of interest to myself due to several reasons.
+Constructing a 2D RPG/Rogue-style game in Java is of interest to myself due to several reasons.
 
 - First of all, developing a game allows myself to unleash my creativity and express my own ideas through the game's design, story and gameplay. I have always wanted to make my own game with my own thoughts, propelling me to continue on with **my** own story and ending and this project gives me exactly that as it allows me to create a unique world that was brought to life according to my vision.
 
