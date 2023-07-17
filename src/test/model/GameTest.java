@@ -96,16 +96,19 @@ public class GameTest {
         // Checks whether first coin already in the game.
         assertEquals(1, game.getCoin().size());
         assertTrue(game.getCoin().contains(game.getCoinPosStart()));
+        assertFalse(game.isValidPosition(game.getCoinPosStart())); // No longer a valid position due to coin
 
         // Tests 2nd spawnCoins
         game.spawnCoins();
         assertEquals(2, game.getCoin().size());
         assertTrue(game.getCoin().contains(game.getCoinPos()));
+        assertFalse(game.isValidPosition(game.getCoinPos()));
 
         // Tests spawning another coin.
         game.spawnCoins();
         assertEquals(3, game.getCoin().size());
         assertTrue(game.getCoin().contains(game.getCoinPos()));
+        assertFalse(game.isValidPosition(game.getCoinPos()));
     }
 
     @Test
@@ -234,6 +237,31 @@ public class GameTest {
 
         // Test #4: Character is colliding.
         assertFalse(game.isValidPosition(game.getCharacter().getCharacterPos()));
+
+        // Test 5: Boundary checking
+        Position boundaryPos1 = new Position(0, 0);
+        assertTrue(game.isValidPosition(boundaryPos1));
+
+        Position boundaryPos2 = new Position(-1, 0);
+        assertFalse(game.isValidPosition(boundaryPos2));
+
+        Position boundaryPos3 = new Position(0, -1);
+        assertFalse(game.isValidPosition(boundaryPos3));
+
+        Position boundaryPos4 = new Position(4, 5);
+        assertTrue(game.isValidPosition(boundaryPos4));
+
+        Position boundaryPos5 = new Position(39, 5);
+        assertTrue(game.isValidPosition(boundaryPos5));
+
+        Position boundaryPos6 = new Position(40, 9);
+        assertFalse(game.isValidPosition(boundaryPos6));
+
+        Position boundaryPos7 = new Position(9, 21);
+        assertTrue(game.isValidPosition(boundaryPos7));
+
+        Position boundaryPos8 = new Position(10, 22);
+        assertFalse(game.isValidPosition(boundaryPos8));
     }
 
     @Test
@@ -267,5 +295,17 @@ public class GameTest {
 
         // Test #10
         assertFalse(game.outOfBoundary(new Position(9, 10)));
+
+        // More Tests
+        assertTrue(game.outOfBoundary(new Position(-1, -1)));
+        assertTrue(game.outOfBoundary(new Position(10, -1)));
+        assertTrue(game.outOfBoundary(new Position(-1, 5)));
+
+        assertTrue(game.outOfBoundary(new Position(40, 22)));
+        assertTrue(game.outOfBoundary(new Position(36, 25)));
+        assertTrue(game.outOfBoundary(new Position(42, 20)));
+        assertFalse(game.outOfBoundary(new Position(5, 8)));
+
+
     }
 }

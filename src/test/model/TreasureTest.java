@@ -49,6 +49,7 @@ public class TreasureTest {
             treasureName = treasure.whatTreasure();
         }
         assertEquals("Bomb", treasureName);
+        
 
     }
 

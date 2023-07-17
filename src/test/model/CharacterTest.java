@@ -117,10 +117,16 @@ public class CharacterTest {
 
     @Test
     void testCheckCollision() {
+        // Check nothing happens first
         assertEquals(100, testCharacter.getHp());
+        testCharacter.checkCollision(new Position(9, 10));
+        assertEquals(100, testCharacter.getHp());
+
+        // Check collide once
         testCharacter.checkCollision(new Position(1,1));
         assertEquals(95, testCharacter.getHp());
 
+        // Check collide twice:
         testCharacter.setCharacterPos(new Position(2, 4));
         testCharacter.checkCollision(new Position(2, 4));
         testCharacter.checkCollision(new Position(2, 4));

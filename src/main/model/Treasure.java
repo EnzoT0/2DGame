@@ -33,11 +33,10 @@ public class Treasure {
             case 3:
                 String t4 = "Meat";
                 return t4;
-            case 4:
+            default:
                 String t5 = "Bomb";
                 return t5;
-            default:
-                return null;
+
         }
     }
 
