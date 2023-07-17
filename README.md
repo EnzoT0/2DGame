@@ -33,13 +33,14 @@ Constructing a 2D RPG/Rogue-style game in Java is of interest to myself due to s
 
 ### First 4:
 
-- As a user, I want to have an inventory system that allows me to collect and equip items.
-- As a user, I want to encounter diverse enemies with unique abilities and behavior patterns.
-- As a user, I want to be able to save my progress and return to where I was whenever I play the game.
+- As a user, I want to have an inventory system that allows me to collect items.
+- As a user, I want to encounter diverse enemies with unique behavior patterns.
+- As a user, I want to add a HP bar that slowly decreases if hit by enemies.
 - As a user, I want to add a coin-based currency system that the player can collect throughout the area.
 
 ### User Stories that I would like to implement:
 
+- As a user, I want to be able to save my progress and return to where I was whenever I play the game.
 - As a user, I want to add a weapon to my character's inventory, allowing me to equip and de-equip it.
 - As a user, I want to add a health potion to my character's inventory, enabling me to heal my character's HP (health points).
 - As a user, I want to add a new location to the list of locations available for the player-controlled character to travel to.
