@@ -3,8 +3,7 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PositionTest {
     private Position position;
@@ -22,6 +21,33 @@ public class PositionTest {
         assertEquals(8, position2.getPosX());
         assertEquals(14, position2.getPosY());
 
+    }
+
+    @Test
+    void testEquals() {
+        // Test for same class
+        Position pos = new Position(5, 10);
+        assertTrue(pos.equals(new Position(5, 10)));
+
+        // Test same class but different variables with same parameters
+        Position samePos1 = new Position(2, 3);
+        Position samePos2 = new Position(2, 3);
+        assertTrue(samePos1.equals(samePos2));
+        assertTrue(samePos2.equals(samePos1));
+
+        // Tests same class but different variables with different parameters.
+        Position diffPos1 = new Position(5, 2);
+        Position diffPos2 = new Position(8, 3);
+        assertFalse(diffPos1.equals(diffPos2));
+        assertFalse(diffPos2.equals(diffPos1));
+
+        // Test for different class
+        Position newPos = new Position(6, 8);
+        assertFalse(newPos.equals(8));
+
+        // Test for null.
+        Position newPos2 = new Position(9, 11);
+        assertFalse(newPos2.equals(null));
     }
 
 }
