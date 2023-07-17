@@ -265,6 +265,15 @@ public class GameTest {
     }
 
     @Test
+    void testMakeValidRandomPosition() {
+        Position pos = new Position(1, 1);
+        assertFalse(game.isValidPosition(pos));
+        Position newPos = game.makeValidRandomPos(pos);
+        assertTrue(game.isValidPosition(newPos));
+
+    }
+
+    @Test
     void testOutOfBoundary() {
         // Test #1
         assertFalse(game.outOfBoundary(new Position(0, 0)));

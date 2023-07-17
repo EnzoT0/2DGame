@@ -69,9 +69,7 @@ public class Game {
     public void spawnCoins() {
         Position pos = generateRandomPosition();
 
-        while (!isValidPosition(pos)) {
-            pos = generateRandomPosition();
-        }
+        makeValidRandomPos(pos);
 
         coin.add(pos);
         coinPos = pos;
@@ -83,11 +81,19 @@ public class Game {
     public void spawnTreasure() {
         Position pos = generateRandomPosition();
 
+        makeValidRandomPos(pos);
+
+        treasures.add(pos);
+        spawnTreasurePos = pos;
+    }
+
+    // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0 for the position.
+    // EFFECTS: Makes a valid random position.
+    public Position makeValidRandomPos(Position pos) {
         while (!isValidPosition(pos)) {
             pos = generateRandomPosition();
         }
-        treasures.add(pos);
-        spawnTreasurePos = pos;
+        return pos;
     }
 
 
