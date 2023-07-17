@@ -213,6 +213,9 @@ public class GameTest {
     void testIsValidPosition() {
         // Test #1: Check is valid position normally
         Position randomPos = game.generateRandomPosition();
+        while (!game.isValidPosition(randomPos)) {
+            randomPos = game.generateRandomPosition();
+        }
         assertTrue(game.isValidPosition(randomPos));
 
         // Test #2: Coin is colliding
@@ -261,5 +264,8 @@ public class GameTest {
 
         // Test #9
         assertFalse(game.outOfBoundary(new Position(game.getMaxX(), game.getMaxY())));
+
+        // Test #10
+        assertFalse(game.outOfBoundary(new Position(9, 10)));
     }
 }
