@@ -206,7 +206,7 @@ public class GameTest {
         // Test whether random position gives a position between the boundaries.
         Position randomPos = game.generateRandomPosition();
         assertTrue(randomPos.getPosX() >= 0 && randomPos.getPosX() <= 39
-        && randomPos.getPosY() >= 0 && randomPos.getPosY() <= 21);
+                && randomPos.getPosY() >= 0 && randomPos.getPosY() <= 21);
     }
 
     @Test
