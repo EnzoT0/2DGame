@@ -16,17 +16,40 @@ public class TreasureTest {
     @Test
     void testWhatTreasure() {
         String treasureName = treasure.whatTreasure();
-        if (treasureName.equals("Sword")) {
-            assertEquals("Sword", treasureName);
-        } else if (treasureName.equals("Health Pot")) {
-            assertEquals("Health Pot", treasureName);
-        } else if (treasureName.equals("Twig")) {
-            assertEquals("Twig", treasureName);
-        } else if (treasureName.equals("Meat")) {
-            assertEquals("Meat", treasureName);
-        } else if (treasureName.equals("Bomb")) {
-            assertEquals("Bomb", treasureName);
+
+        // Test Sword
+        while (!treasureName.equals("Sword")) {
+            treasureName = treasure.whatTreasure();
         }
+        assertEquals("Sword", treasureName);
+
+
+        //Test Health Pot
+        while (!treasureName.equals("Health Pot")) {
+            treasureName = treasure.whatTreasure();
+        }
+        assertEquals("Health Pot", treasureName);
+
+
+        //Test Twig
+        while (!treasureName.equals("Twig")) {
+            treasureName = treasure.whatTreasure();
+        }
+        assertEquals("Twig", treasureName);
+
+
+        // Test Meat
+        while (!treasureName.equals("Meat")) {
+            treasureName = treasure.whatTreasure();
+        }
+        assertEquals("Meat", treasureName);
+
+        // Test Bomb
+        while (!treasureName.equals("Bomb")) {
+            treasureName = treasure.whatTreasure();
+        }
+        assertEquals("Bomb", treasureName);
+
     }
 
     @Test
