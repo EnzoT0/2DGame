@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 // Game represents the state of the game, including the update method which is used to update the game.
-// It also includes what items are added and how to handle them.
+// It also includes what items are added and how to check them.
 
 public class Game {
 
@@ -23,9 +23,9 @@ public class Game {
 
     private Position coinPos;
     private Position coinPosStart;
-    private Position handleCoinPos;
+    private Position checkCoinPos;
     private Position spawnTreasurePos;
-    private Position handleTreasurePos;
+    private Position checkTreasurePos;
 
 
 
@@ -42,17 +42,17 @@ public class Game {
 
     // MODIFIES: this, Character
     // EFFECTS: Progresses the game state, moving the character, adding an infinite amount of coins and treasures
-    // and handling them. Handles how the game ends as well when hp = 0.
+    // and handling them. Checks how the game ends as well when hp = 0.
     public void update() {
         character.move();
 
-        handleCoin();
+        checkCoin();
 
         if (coin.isEmpty()) {
             spawnCoins();
         }
 
-        handleTreasure();
+        checkTreasure();
 
         if (treasures.isEmpty()) {
             spawnTreasure();
@@ -101,7 +101,7 @@ public class Game {
     // EFFECTS: Checks for coins that the character has collided. If there is one, then remove it from the
     // set and board. Add to coin score.
     // Note: Code referenced from snake console.
-    public void handleCoin() {
+    public void checkCoin() {
         Position coinsEarned = coin.stream().filter(character::hasCollided).findFirst().orElse(null);
         if (coinsEarned == null) {
             return;
@@ -109,7 +109,7 @@ public class Game {
 
         coin.remove(coinsEarned);
         coinAmount++;
-        handleCoinPos = coinsEarned;
+        checkCoinPos = coinsEarned;
 
 
     }
@@ -117,7 +117,7 @@ public class Game {
     // MODIFIES: this, Treasure
     // EFFECTS: Checks for treasures that the character has collided. If there is one, then remove it
     // from the set and thus the board. Adds the treasure to the inventory.
-    public void handleTreasure() {
+    public void checkTreasure() {
         Position checkTreasures = treasures.stream().filter(character::hasCollided).findFirst().orElse(null);
         if (checkTreasures == null) {
             return;
@@ -125,7 +125,7 @@ public class Game {
 
         treasures.remove(checkTreasures);
         inventory.addTreasure(new Treasure(treasure.whatTreasure()));
-        handleTreasurePos = checkTreasures;
+        checkTreasurePos = checkTreasures;
     }
 
 
@@ -199,9 +199,9 @@ public class Game {
         return coinPosStart;
     }
 
-    // EFFECTS: returns the coinsEarned position from the handleCoin method.
-    public Position getHandleCoinPos() {
-        return handleCoinPos;
+    // EFFECTS: returns the coinsEarned position from the checkCoinPos method.
+    public Position getCheckCoinPos() {
+        return checkCoinPos;
     }
 
     // EFFECTS: returns the treasure position, mainly for testing purposes.
@@ -209,8 +209,8 @@ public class Game {
         return spawnTreasurePos;
     }
 
-    // EFFECTS: returns the position of checkTreasures in handleTreasure. Mainly for testing purposes.
-    public Position getHandleTreasurePos() {
-        return handleTreasurePos;
+    // EFFECTS: returns the position of checkTreasures in checkTreasure. Mainly for testing purposes.
+    public Position getCheckTreasurePos() {
+        return checkTreasurePos;
     }
 }

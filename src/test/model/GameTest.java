@@ -58,22 +58,22 @@ public class GameTest {
         // Check 3rd update, this time character collided with the spawned coin.
         game.getCharacter().setCharacterPos(game.getCoinPos());
         game.update();
-        assertFalse(game.getCoin().contains(game.getHandleCoinPos())); // Update changes coinPos to newSpawn CoinPos.
+        assertFalse(game.getCoin().contains(game.getCheckCoinPos())); // Update changes coinPos to newSpawn CoinPos.
         assertEquals(1, game.getCoin().size());
 
         assertTrue(game.getCoin().contains(game.getCoinPos()));
-        assertFalse(game.getCoinPos() == game.getHandleCoinPos()); // Shows that it's now a different position.
+        assertFalse(game.getCoinPos() == game.getCheckCoinPos()); // Shows that it's now a different position.
         assertEquals(2, game.getCoinAmount());
         assertFalse(game.isEnded());
 
         // Check 4th update, this time character collided with treasure.
         game.getCharacter().setCharacterPos(game.getSpawnTreasurePos());
         game.update();
-        assertFalse(game.getTreasures().contains(game.getHandleTreasurePos())); // Collided with treasure.
+        assertFalse(game.getTreasures().contains(game.getCheckTreasurePos())); // Collided with treasure.
 
         assertTrue(game.getTreasures().contains(game.getSpawnTreasurePos())); // new treasure was spawned.
         assertEquals(1, game.getTreasures().size());
-        assertFalse(game.getHandleTreasurePos() == game.getSpawnTreasurePos());
+        assertFalse(game.getCheckTreasurePos() == game.getSpawnTreasurePos());
         assertFalse(game.isEnded());
 
         // Check 4th update, nothing happens.
@@ -128,13 +128,13 @@ public class GameTest {
     }
 
     @Test
-    void testHandleCoin() {
+    void testCheckCoin() {
         // Nothing happens at first, no collision. 1 coin in the screen right now due to initialization.
         game.getCharacter().setCharacterPos(game.generateRandomPosition());
         assertEquals(1, game.getCoin().size());
         assertTrue(game.getCoin().contains(game.getCoinPosStart()));
         assertEquals(0, game.getCoinAmount());
-        game.handleCoin();
+        game.checkCoin();
         assertEquals(1, game.getCoin().size());
         assertTrue(game.getCoin().contains(game.getCoinPosStart()));
         assertEquals(0, game.getCoinAmount());
@@ -144,7 +144,7 @@ public class GameTest {
         assertEquals(1, game.getCoin().size());
         assertEquals(0, game.getCoinAmount());
 
-        game.handleCoin();
+        game.checkCoin();
 
         assertEquals(0, game.getCoin().size());
         assertFalse(game.getCoin().contains(game.getCoinPosStart()));
@@ -157,7 +157,7 @@ public class GameTest {
         assertEquals(1, game.getCoinAmount());
 
         game.getCharacter().setCharacterPos(game.getCoinPos());
-        game.handleCoin();
+        game.checkCoin();
 
         assertEquals(0, game.getCoin().size());
         assertFalse(game.getCoin().contains(game.getCoinPos()));
@@ -166,11 +166,11 @@ public class GameTest {
     }
 
     @Test
-    void testHandleTreasure() {
+    void testCheckTreasure() {
         // Nothing happens at first, no collision.
         game.getCharacter().setCharacterPos(game.generateRandomPosition());
         assertEquals(0, game.getTreasures().size());
-        game.handleTreasure();
+        game.checkTreasure();
         assertEquals(0, game.getTreasures().size());
 
         // Collides with treasure.
@@ -180,7 +180,7 @@ public class GameTest {
         game.getCharacter().setCharacterPos(game.getSpawnTreasurePos());
         assertEquals(0, game.getInventory().getTreasures().size());
 
-        game.handleTreasure();
+        game.checkTreasure();
 
         assertEquals(0, game.getTreasures().size());
         assertFalse(game.getTreasures().contains(game.getSpawnTreasurePos()));
@@ -195,7 +195,7 @@ public class GameTest {
         assertFalse(charPos == game.getSpawnTreasurePos());
 
         game.getCharacter().setCharacterPos(game.getSpawnTreasurePos());
-        game.handleTreasure();
+        game.checkTreasure();
 
         assertEquals(0, game.getTreasures().size());
         assertFalse(game.getTreasures().contains(game.getSpawnTreasurePos()));

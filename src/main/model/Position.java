@@ -23,6 +23,9 @@ public class Position {
         return posY;
     }
 
+    // EFFECTS: Returns true if object c is the same as the current object,
+    // Returns false if c is null, otherwise set c to a position and returns true
+    // if posX and posY are equal. Returns false otherwise.
     @Override
     public boolean equals(Object c) {
         if (this == c) {

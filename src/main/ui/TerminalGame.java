@@ -24,6 +24,9 @@ import java.util.Scanner;
 
 // UI portion of the game, including the screen and the render and update portion of the game.
 
+// Some parts of the code is taken from the TerminalGame class
+// in the snake console project: https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna
+
 public class TerminalGame {
 
     private Game game;
@@ -192,28 +195,25 @@ public class TerminalGame {
 
     // MODIFIES: this
     // EFFECTS: Draws the coins into the screen in the game using the drawPosition method.
-    @SuppressWarnings({"checkstyle:AvoidEscapedUnicodeCharacters", "checkstyle:SuppressWarnings"})
     private void drawCoin() {
         for (Position coin : game.getCoin()) {
-            drawPosition(coin, TextColor.ANSI.YELLOW, '\u2B24', false);
+            drawPosition(coin, TextColor.ANSI.YELLOW, "c", true);
         }
     }
 
     // MODIFIES: this
     // EFFECTS: Draws the treasures into the screen in the game using the drawPosition method.
-    @SuppressWarnings({"checkstyle:AvoidEscapedUnicodeCharacters", "checkstyle:SuppressWarnings"})
     private void drawTreasure() {
         for (Position treasure : game.getTreasures()) {
-            drawPosition(treasure, TextColor.ANSI.BLUE, '\u2B24', false);
+            drawPosition(treasure, TextColor.ANSI.BLUE, "t", true);
         }
     }
 
     // MODIFIES: this
     // EFFECTS: Draws the enemies into the screen in the game using the drawPosition method.
-    @SuppressWarnings({"checkstyle:AvoidEscapedUnicodeCharacters", "checkstyle:SuppressWarnings"})
     private void drawEnemies() {
         for (Enemy enemy : enemies) {
-            drawPosition(enemy.getEnemyPos(), TextColor.ANSI.RED, '\u2588', true);
+            drawPosition(enemy.getEnemyPos(), TextColor.ANSI.RED, "x", true);
         }
     }
 
@@ -250,20 +250,19 @@ public class TerminalGame {
 
     // MODIFIES: this
     // EFFECTS: Draws the character into the screen in the game using the drawPosition method.
-    @SuppressWarnings({"checkstyle:AvoidEscapedUnicodeCharacters", "checkstyle:SuppressWarnings"})
     private void drawCharacter() {
         Character character = game.getCharacter();
-        drawPosition(character.getCharacterPos(), TextColor.ANSI.WHITE, '\u2588', true);
+        drawPosition(character.getCharacterPos(), TextColor.ANSI.WHITE, "x", true);
     }
 
     // MODIFIES: this
     // EFFECTS: Main method used to draw the different objects into the screen in the game.
     // If it is wide, then it will draw the object twice to make it appear wide.
     // Note: Code referenced from snake console.
-    private void drawPosition(Position pos, TextColor color, char c, boolean wide) {
+    private void drawPosition(Position pos, TextColor color, String c, boolean wide) {
         TextGraphics text = screen.newTextGraphics();
         text.setForegroundColor(color);
-        text.putString(pos.getPosX() * 2, pos.getPosY() + 1, String.valueOf(c));
+        text.putString(pos.getPosX() * 2, pos.getPosY() + 1, c);
 
         if (wide) {
             text.putString(pos.getPosX() * 2 + 1, pos.getPosY() + 1, String.valueOf(c));
