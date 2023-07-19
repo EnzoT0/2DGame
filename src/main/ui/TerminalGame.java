@@ -24,8 +24,8 @@ import java.util.Scanner;
 
 // UI portion of the game, including the screen and the render and update portion of the game.
 
-// Some parts of the code is taken from the TerminalGame class
-// in the snake console project: https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna
+// Some parts of the code is referenced from the TerminalGame class in the snake console project (drawPosition):
+// https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna/blob/main/src/main/java/com/mazenk/snake/ui/TerminalGame.java
 
 public class TerminalGame {
 
@@ -45,15 +45,15 @@ public class TerminalGame {
         EnemyList enemyList = new EnemyList();
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("How many enemies would you like from 1-10?"); // 1-10 for space purposes. Infinite works.
+        System.out.println("How many enemies would you like?");
 
         while (true) {
             if (scanner.hasNextInt()) {
                 userInput = scanner.nextInt();
-                if (userInput >= 1 && userInput <= 10) {
+                if (userInput >= 0) {
                     break;
                 } else {
-                    System.out.println("Invalid input. Please provide a value from 1-10.");
+                    System.out.println("Invalid input. Please provide a value that is above 0.");
                 }
             } else {
                 System.out.println("Invalid input. Please provide an integer.");

@@ -12,8 +12,6 @@ public class EnemyList {
     private Random random = new Random();
     private List<Enemy> enemies;
 
-    // REQUIRES: 10 >= numEnemies > 0
-    // Note: numEnemies can be infinite, it is 10 just to make the game easier.
     // MODIFIES: this
     // EFFECTS: adds x amount of enemies, each with a given position, into a list of enemies.
     public List<Enemy> addEnemies(int numEnemies) {

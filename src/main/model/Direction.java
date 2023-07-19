@@ -3,6 +3,9 @@ package model;
 
 // Enum for Direction
 
+// Code follows the one from the Direction enum in the snake console project:
+// https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna/blob/main/src/main/java/com/mazenk/snake/model/Direction.java
+
 public enum Direction {
     UP(0, -1),
     DOWN(0, 1),

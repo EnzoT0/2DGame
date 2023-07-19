@@ -8,8 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
 // Game represents the state of the game, including the update method which is used to update the game.
 // It also includes what items are added and how to check them.
 
-// Some parts of the code is taken/referenced from the Game class
-// in the snake console project: https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna
+// Some parts of the code is referenced from the Game class in the snake console project (Update):
+// https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna/blob/main/src/main/java/com/mazenk/snake/model/Game.java
 
 public class Game {
 
@@ -33,7 +33,7 @@ public class Game {
 
 
     // EFFECTS: Constructs a game with a max X and max Y.
-    // Generates 2 different coin, each at a different location in the board.
+    // Generates a coin at a random location in the board.
     public Game(int maxX, int maxY) {
         this.maxX = maxX;
         this.maxY = maxY;
@@ -103,7 +103,6 @@ public class Game {
     // MODIFIES: this
     // EFFECTS: Checks for coins that the character has collided. If there is one, then remove it from the
     // set and board. Add to coin score.
-    // Note: Code referenced from snake console.
     public void checkCoin() {
         Position coinsEarned = coin.stream().filter(character::hasCollided).findFirst().orElse(null);
         if (coinsEarned == null) {

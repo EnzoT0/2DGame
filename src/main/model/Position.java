@@ -3,6 +3,9 @@ package model;
 // Position class represents the position of any object viable to this class (such as characters, enemies, coins
 // and such). The position is used to determine where the objects are in the screen.
 
+// Code follows the Position class in the snake console project:
+// https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna/blob/main/src/main/java/com/mazenk/snake/model/Position.java
+
 public class Position {
     private int posX;
     private int posY;
