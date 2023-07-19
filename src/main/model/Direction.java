@@ -1,6 +1,8 @@
 package model;
 
 
+// Enum for Direction
+
 public enum Direction {
     UP(0, -1),
     DOWN(0, 1),
@@ -26,5 +28,15 @@ public enum Direction {
                 pos.getPosX() + dx,
                 pos.getPosY() + dy
         );
+    }
+
+    // EFFECTS: returns dx of direction.
+    public int getDx() {
+        return dx;
+    }
+
+    // EFFECTS: returns dy of direction.
+    public int getDy() {
+        return dy;
     }
 }
