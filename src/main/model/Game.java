@@ -8,6 +8,9 @@ import java.util.concurrent.ThreadLocalRandom;
 // Game represents the state of the game, including the update method which is used to update the game.
 // It also includes what items are added and how to check them.
 
+// Some parts of the code is taken/referenced from the Game class
+// in the snake console project: https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna
+
 public class Game {
 
     private final Character character = new Character();
