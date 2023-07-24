@@ -24,7 +24,7 @@ public enum Direction {
     }
 
 
-    // MODIFIES: Position
+    // MODIFIES: pos
     // EFFECTS: Returns a new position by adding the x and y coord.
     public Position move(Position pos) {
         return new Position(

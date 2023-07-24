@@ -57,4 +57,9 @@ public class Treasure {
         return quantity;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the quantity to the given integer input.
+    public void setQuantity(Integer a) {
+        quantity = a;
+    }
 }

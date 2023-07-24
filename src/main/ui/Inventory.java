@@ -31,6 +31,18 @@ public class Inventory {
         System.out.println("Added " + treasure.getName() + " to inventory.");
     }
 
+    // MODIFIES: this
+    // EFFECTS: same thing as addTreasure, except no message will appear (no system.out).
+    public void addSilentTreasure(Treasure treasure) {
+        for (Treasure oneTreasure : treasures) {
+            if (oneTreasure.getName().equals(treasure.getName())) {
+                oneTreasure.increaseQuantity();
+                return;
+            }
+        }
+        treasures.add(treasure);
+    }
+
     // EFFECTS: Displays the inventory system with the given amount of treasures inside it.
     public void displayInventory() {
         if (treasures.isEmpty()) {

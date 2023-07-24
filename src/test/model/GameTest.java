@@ -2,6 +2,11 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ui.Inventory;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,6 +94,82 @@ public class GameTest {
         game.update();
         assertTrue(game.isEnded());
 
+    }
+
+    @Test
+    void testEnemyUpdate() {
+        EnemyList enemyList = new EnemyList();
+        List<Enemy> enemies = enemyList.addEnemies(1);
+        game.setEnemies(enemies);
+
+        assertEquals(1, enemyList.getEnemies().size());
+
+        // Test 1
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(1, 1));
+        }
+        game.enemyUpdate();
+
+        assertEquals(new Position(1 + game.getDx(), 1 + game.getDy()), enemies.get(0).getEnemyPos());
+
+        // Test 2
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(-2, 4));
+        }
+        while (game.getEnemies().get(0).getEnemyPos().getPosX() != 1) {
+            game.enemyUpdate();
+        }
+        assertEquals(1, game.getEnemies().get(0).getEnemyPos().getPosX());
+
+        // Test 3
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(4, -2));
+        }
+
+        while (game.getEnemies().get(0).getEnemyPos().getPosY() != 1) {
+            game.enemyUpdate();
+        }
+        assertEquals(1, game.getEnemies().get(0).getEnemyPos().getPosY());
+
+        // Test 4
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(40, 5));
+        }
+
+        while (game.getEnemies().get(0).getEnemyPos().getPosX() != 38) {
+            game.enemyUpdate();
+        }
+        assertEquals(38, game.getEnemies().get(0).getEnemyPos().getPosX());
+
+        // Test 5
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(2, 22));
+        }
+        while (game.getEnemies().get(0).getEnemyPos().getPosY() != 20) {
+            game.enemyUpdate();
+        }
+        assertEquals(20, game.getEnemies().get(0).getEnemyPos().getPosY());
+
+
+    }
+
+    @Test
+    void testCheckRandPosUpdate() {
+        // Test 1
+        while (game.isRand() != true) {
+            game.checkRandPosUpdate();
+        }
+        assertEquals(0, game.getDx());
+        assertEquals(0, game.getDy());
+        assertTrue(game.isRand());
+
+        // Test 2
+        while (game.isRand() != false) {
+            game.checkRandPosUpdate();
+        }
+        assertEquals(game.getRandDx(), game.getDx());
+        assertEquals(game.getRandDy(), game.getDy());
+        assertFalse(game.isRand());
     }
 
     @Test
@@ -315,6 +396,60 @@ public class GameTest {
         assertTrue(game.outOfBoundary(new Position(42, 20)));
         assertFalse(game.outOfBoundary(new Position(5, 8)));
 
+    }
 
+    @Test
+    void testSetInventory() {
+        assertEquals(0, game.getInventory().getTreasures().size());
+        Inventory inventory = new Inventory();
+        inventory.addTreasure(new Treasure("lol"));
+        assertEquals(1, inventory.getTreasures().size());
+
+        game.setInventory(inventory);
+        assertEquals(1, game.getInventory().getTreasures().size());
+    }
+
+    @Test
+    void testSetTreasure() {
+        Set<Position> treasures = new HashSet<>();
+        treasures.add(new Position(2, 3));
+        game.setTreasures(treasures);
+
+        assertEquals(new Position(2, 3), game.getTreasures().stream().findFirst().get());
+    }
+
+    @Test
+    void testSetTreasurePos() {
+        game.getTreasures().remove(game.getSpawnTreasurePos());
+
+        // Set Spawn Treasure:
+        game.setSpawnTreasurePos(new Position(4, 5));
+        assertEquals(new Position(4, 5), game.getSpawnTreasurePos());
+
+        // Set Check Treasure
+        game.setCheckTreasurePos(new Position(2, 3));
+        assertEquals(new Position(2, 3), game.getCheckTreasurePos());
+    }
+
+    @Test
+    void testSetCoin() {
+        game.getCoin().remove(game.getCoinPosStart());
+
+        // Set Spawn Coin
+        game.setCoinPosStart(new Position(5, 6));
+        assertEquals(new Position(5, 6), game.getCoinPosStart());
+
+        // Set Coin Pos
+        game.setCoinPos(new Position(8, 7));
+        assertEquals(new Position(8, 7), game.getCoinPos());
+
+        // Set Check Coin Pos
+        game.setCheckCoinPos(new Position(12, 8));
+        assertEquals(new Position(12, 8), game.getCheckCoinPos());
+
+        // Set Coin Amount
+        assertEquals(0, game.getCoinAmount());
+        game.setCoinAmount(2);
+        assertEquals(2, game.getCoinAmount());
     }
 }

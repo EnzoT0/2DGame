@@ -14,9 +14,15 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import model.*;
 import model.Character;
 import model.EnemyList;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,11 +38,13 @@ public class TerminalGame {
     private Game game;
     private Screen screen;
     private WindowBasedTextGUI endGui;
-    private final Random rand = new Random();
-    private List<Enemy> enemies = new ArrayList<>();
-    private int dx;
-    private int dy;
+
     private int userInput;
+    private boolean isLoaded;
+
+    private JsonWriter jsonWriter = new JsonWriter(SAVE_FILE_PATH);
+    private JsonReader jsonReader = new JsonReader(SAVE_FILE_PATH);
+    private static final String SAVE_FILE_PATH = "./data/game_save.json";
 
     // MODIFIES: this, EnemyList
     // EFFECTS: Essentially starts the game, asking for user input on the amount of enemies as well as
@@ -44,6 +52,53 @@ public class TerminalGame {
     public void start() throws IOException, InterruptedException {
         EnemyList enemyList = new EnemyList();
 
+        yesOrNoGame();
+        if (isLoaded == true) {
+            loadGame();
+            instructions();
+            screen = new DefaultTerminalFactory().createScreen();
+            screen.startScreen();
+            System.out.println("Loaded a new game!");
+            beginUpdate();
+        } else {
+            askAmountEnemies();
+
+            screen = new DefaultTerminalFactory().createScreen();
+            screen.startScreen();
+
+            game = new Game(39, 21);
+
+            enemyList.addEnemies(userInput);
+            List<Enemy> numEnemy = enemyList.getEnemies();
+            game.setEnemies(numEnemy);
+            //enemies = enemyList.getEnemies();
+            instructions();
+            beginUpdate();
+        }
+
+    }
+
+    // EFFECTS: asks whether user would like to load a saved game. If yes, then load a saved version
+    // of the game. If no, then continue normally.
+    public void yesOrNoGame() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Would you like to load a saved game? yes or no");
+
+        while (true) {
+            String userInput = scan.next();
+            if (userInput.equals("yes")) {
+                isLoaded = true;
+                break;
+            } else if (userInput.equals("no")) {
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter 'yes' or 'no'");
+            }
+        }
+    }
+
+    // EFFECTS: asks the user about how many enemies they would like to have.
+    public void askAmountEnemies() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("How many enemies would you like?");
 
@@ -60,16 +115,13 @@ public class TerminalGame {
                 scanner.next();
             }
         }
+    }
 
-        screen = new DefaultTerminalFactory().createScreen();
-        screen.startScreen();
-
-        game = new Game(39, 21);
-
-        enemyList.addEnemies(userInput);
-        List<Enemy> numEnemy = enemyList.getEnemies();
-        enemies = numEnemy;
-        beginUpdate();
+    // EFFECTS: Gives the instructions of the game.
+    public void instructions() {
+        System.out.println("Press the arrow keys to move!");
+        System.out.println("Press 'i' to access your inventory");
+        System.out.println("Press 's' to save the game");
     }
 
     // EFFECTS: Begins the update when game has not ended.
@@ -82,13 +134,13 @@ public class TerminalGame {
         System.exit(0);
     }
 
-    // MODIFIES: this, Game
+    // MODIFIES: this, game
     // EFFECTS: Updates both the game and enemies, doing the user inputs too. Renders the game afterward.
     public void update() throws IOException {
         handleUserInput();
 
         game.update();
-        enemyUpdate();
+        game.enemyUpdate();
 
 
         screen.setCursorPosition(new TerminalPosition(0, 0));
@@ -99,7 +151,27 @@ public class TerminalGame {
         screen.setCursorPosition(new TerminalPosition(screen.getTerminalSize().getColumns() - 1, 0));
     }
 
-    // MODIFIES: Character
+    // EFFECTS: saves the game into a file.
+    public void saveGame() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(game);
+            jsonWriter.close();
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadGame() {
+        try {
+            game = jsonReader.loadGame();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // MODIFIES: character
     // EFFECTS: Handles user input, asking only to move when an arrow key function has been inputted.
     // When inputted, move character to desired location. Handles user input in opening the inventory
     // system as well, displaying the treasures that the player has earned through the game.
@@ -111,6 +183,10 @@ public class TerminalGame {
         }
 
         if (stroke.getCharacter() != null) {
+            if (stroke.getCharacter() == 's') {
+                System.out.println("Saved the game!");
+                saveGame();
+            }
             if (stroke.getCharacter() == 'i') {
                 System.out.println("Opened Inventory");
                 game.getInventory().displayInventory();
@@ -143,35 +219,6 @@ public class TerminalGame {
         }
     }
 
-    // MODIFIES: EnemyList
-    // EFFECTS: Updates the enemy movement and sets its new position on the board. It has a
-    // higher probability of not moving at all but there still is a chance of moving.
-    // It also checks for character collision.
-    public void enemyUpdate() {
-        for (Enemy enemy : enemies) {
-            if (rand.nextDouble() < 0.7) {
-                dx = 0;
-                dy = 0;
-            } else {
-                dx = rand.nextInt(3) - 1;
-                dy = rand.nextInt(3) - 1;
-            }
-            int newPosX = enemy.getEnemyPos().getPosX() + dx;
-            int newPosY = enemy.getEnemyPos().getPosY() + dy;
-            if (newPosX >= 39) {
-                newPosX = 39 - 1;
-            } else if (newPosY >= 21) {
-                newPosY = 21 - 1;
-            } else if (newPosX < 0) {
-                newPosX += 1;
-            } else if (newPosY < 0) {
-                newPosY += 1;
-            }
-            Position pos = new Position(newPosX, newPosY);
-            enemy.setEnemyPos(pos);
-            game.getCharacter().checkCollision(pos);
-        }
-    }
 
 
     // MODIFIES: this
@@ -193,6 +240,7 @@ public class TerminalGame {
 
     }
 
+
     // MODIFIES: this
     // EFFECTS: Draws the coins into the screen in the game using the drawPosition method.
     private void drawCoin() {
@@ -212,7 +260,7 @@ public class TerminalGame {
     // MODIFIES: this
     // EFFECTS: Draws the enemies into the screen in the game using the drawPosition method.
     private void drawEnemies() {
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : game.getEnemies()) {
             drawPosition(enemy.getEnemyPos(), TextColor.ANSI.RED, "x", true);
         }
     }
@@ -265,7 +313,7 @@ public class TerminalGame {
         text.putString(pos.getPosX() * 2, pos.getPosY() + 1, c);
 
         if (wide) {
-            text.putString(pos.getPosX() * 2 + 1, pos.getPosY() + 1, String.valueOf(c));
+            text.putString(pos.getPosX() * 2 + 1, pos.getPosY() + 1, c);
         }
 
     }

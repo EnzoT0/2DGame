@@ -62,4 +62,11 @@ public class TreasureTest {
         treasure.increaseQuantity();
         assertEquals(4, treasure.getQuantity());
     }
+
+    @Test
+    void testSetQuantity() {
+        assertEquals(1, treasure.getQuantity());
+        treasure.setQuantity(4);
+        assertEquals(4, treasure.getQuantity());
+    }
 }

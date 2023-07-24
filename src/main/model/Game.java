@@ -11,6 +11,8 @@ import java.util.concurrent.ThreadLocalRandom;
 // Some parts of the code is referenced from the Game class in the snake console project (Update):
 // https://github.students.cs.ubc.ca/CPSC210/SnakeConsole-Lanterna/blob/main/src/main/java/com/mazenk/snake/model/Game.java
 
+// Map is arrayList
+
 public class Game {
 
     private final Character character = new Character();
@@ -18,8 +20,8 @@ public class Game {
     private boolean ended = false;
     private final int maxX;
     private final int maxY;
-    private final Set<Position> coin = new HashSet<>();
-    private final Set<Position> treasures = new HashSet<>();
+    private Set<Position> coin = new HashSet<>();
+    private Set<Position> treasures = new HashSet<>();
     private int coinAmount;
     private Treasure treasure = new Treasure("None");
     private Inventory inventory = new Inventory();
@@ -30,6 +32,14 @@ public class Game {
     private Position spawnTreasurePos;
     private Position checkTreasurePos;
 
+    private int dx;
+    private int dy;
+    private final Random rand = new Random();
+    private List<Enemy> enemies = new ArrayList<>();
+
+    private boolean isRand;
+    private int randDx;
+    private int randDy;
 
 
     // EFFECTS: Constructs a game with a max X and max Y.
@@ -43,11 +53,12 @@ public class Game {
         coinPosStart = pos;
     }
 
-    // MODIFIES: this, Character
+    // MODIFIES: this, character
     // EFFECTS: Progresses the game state, moving the character, adding an infinite amount of coins and treasures
     // and handling them. Checks how the game ends as well when hp = 0.
     public void update() {
         character.move();
+        enemyUpdate();
 
         checkCoin();
 
@@ -61,10 +72,52 @@ public class Game {
             spawnTreasure();
         }
 
-        if (getCharacter().getHp() == 0) {
+        if (getCharacter().getHp() <= 0) {
             ended = true;
         }
     }
+
+    // MODIFIES: enemies
+    // EFFECTS: Updates the enemy movement and sets its new position on the board. It has a
+    // higher probability of not moving at all but there still is a chance of moving.
+    // It also checks for character collision.
+    public void enemyUpdate() {
+        for (Enemy enemy : enemies) {
+            checkRandPosUpdate();
+            int newPosX = enemy.getEnemyPos().getPosX() + dx;
+            int newPosY = enemy.getEnemyPos().getPosY() + dy;
+            if (newPosX >= 39) {
+                newPosX = 39 - 1;
+            } else if (newPosY >= 21) {
+                newPosY = 21 - 1;
+            } else if (newPosX < 0) {
+                newPosX += 1;
+            } else if (newPosY < 0) {
+                newPosY += 1;
+            }
+            Position pos = new Position(newPosX, newPosY);
+            enemy.setEnemyPos(pos);
+            getCharacter().checkCollision(pos);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: If rand.nextDouble() is less than 70%, then position will not move, else it will move from
+    // -1 to 1, depending on the random number it gets.
+    public void checkRandPosUpdate() {
+        if (rand.nextDouble() < 0.7) {
+            dx = 0;
+            dy = 0;
+            isRand = true;
+        } else {
+            randDx = rand.nextInt(3) - 1;
+            randDy = rand.nextInt(3) - 1;
+            dx = randDx;
+            dy = randDy;
+            isRand = false;
+        }
+    }
+
 
     // MODIFIES: this
     // EFFECTS: Spawns a new coin into a valid position in the game.
@@ -116,7 +169,7 @@ public class Game {
 
     }
 
-    // MODIFIES: this, Treasure
+    // MODIFIES: this, treasure
     // EFFECTS: Checks for treasures that the character has collided. If there is one, then remove it
     // from the set and thus the board. Adds the treasure to the inventory.
     public void checkTreasure() {
@@ -151,6 +204,23 @@ public class Game {
         return pos.getPosX() < 0 || pos.getPosY() < 0 || pos.getPosX() > maxX || pos.getPosY() > maxY;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the enemy list to the given input.
+    public void setEnemies(List<Enemy> enemies) {
+        this.enemies = enemies;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the inventory to the given input.
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    // EFFECTS: returns the enemy list.
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
+
     // EFFECTS: returns the character.
     public Character getCharacter() {
         return character;
@@ -174,6 +244,73 @@ public class Game {
     // EFFECTS: returns the position of the treasures in the board.
     public Set<Position> getTreasures() {
         return treasures;
+    }
+
+    // EFFECTS: returns dx.
+    public int getDx() {
+        return dx;
+    }
+
+    // EFFECTS: returns dy.
+    public int getDy() {
+        return dy;
+    }
+
+    // EFFECTS: returns whether isRand is true or false.
+    public boolean isRand() {
+        return isRand;
+    }
+
+    // EFFECTS: Returns the random Dx.
+    public int getRandDx() {
+        return randDx;
+    }
+
+    // EFFECTS: Returns the random Dy.
+    public int getRandDy() {
+        return randDy;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the set of treasures to the given input.
+    public void setTreasures(Set<Position> treasures) {
+        this.treasures = treasures;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the position of the treasure spawn to the given input.
+    public void setSpawnTreasurePos(Position pos) {
+        spawnTreasurePos = pos;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the position of the checkTreasure method to the given input.
+    public void setCheckTreasurePos(Position pos) {
+        checkTreasurePos = pos;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the position of the starting coin position to the given input.
+    public void setCoinPosStart(Position pos) {
+        coinPosStart = pos;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the position of the spawned coin to the given input.
+    public void setCoinPos(Position pos) {
+        coinPos = pos;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the position of the checkCoin method to the given input.
+    public void setCheckCoinPos(Position pos) {
+        checkCoinPos = pos;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the coin amount into the given input.
+    public void setCoinAmount(Integer amount) {
+        coinAmount = amount;
     }
 
     // EFFECTS: returns the amount of coins the player has earned throughout the game.
