@@ -47,4 +47,13 @@ public class EnemyTest {
         enemy.minusHp();
         assertEquals(0, enemy.getHp());
     }
+
+    @Test
+    void testSetHp() {
+        assertEquals(10, enemy.getHp());
+        enemy.setHp(5);
+        assertEquals(5, enemy.getHp());
+        enemy.setHp(0);
+        assertEquals(0, enemy.getHp());
+    }
 }

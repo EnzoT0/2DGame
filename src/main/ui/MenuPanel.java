@@ -25,6 +25,19 @@ public class MenuPanel extends JPanel {
         JButton pauseGame = new JButton("Pause Game");
         pauseGame.addActionListener(e -> changeState());
         add(pauseGame);
+
+        add(Box.createHorizontalStrut(space));
+
+        JButton saveGame = new JButton("Save Game");
+        saveGame.addActionListener(e -> save());
+        add(saveGame);
+
+        add(Box.createHorizontalStrut(space));
+
+        JButton loadGame = new JButton("Load Game");
+        loadGame.addActionListener(e -> load());
+        add(loadGame);
+
     }
 
     public void displayInventory() {
@@ -35,6 +48,16 @@ public class MenuPanel extends JPanel {
 
     public void changeState() {
         terminalGame.checkState();
+        terminalGame.requestFocusInWindow();
+    }
+
+    public void save() {
+        terminalGame.saveGame();
+        terminalGame.requestFocusInWindow();
+    }
+
+    public void load() {
+        terminalGame.loadGame();
         terminalGame.requestFocusInWindow();
     }
 

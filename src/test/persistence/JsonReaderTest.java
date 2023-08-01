@@ -2,6 +2,7 @@ package persistence;
 
 import model.*;
 import org.junit.jupiter.api.Test;
+import ui.GameKeyHandler;
 import ui.Inventory;
 
 import java.io.FileNotFoundException;
@@ -13,11 +14,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class JsonReaderTest {
 
+    private GameKeyHandler keyHandler = new GameKeyHandler();
+
     @Test
     void testNoFile() {
         JsonReader reader = new JsonReader("./data/lmaonofilemoment.json");
         try {
-            Game game = reader.loadGame();
+            Game game = reader.loadGame(keyHandler);
             fail("Did not except for this to pass");
         } catch (IOException e) {
             ///
@@ -28,7 +31,7 @@ public class JsonReaderTest {
     void testReaderGameSpawnTreasure() {
         JsonReader jsonReader = new JsonReader("./data/testReaderSpawnTreasure.json");
         try {
-            Game game = jsonReader.loadGame();
+            Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getSpawnTreasurePos());
 
         } catch (FileNotFoundException e) {
@@ -44,7 +47,7 @@ public class JsonReaderTest {
     void testReaderGameCheckTreasure() {
         JsonReader jsonReader = new JsonReader("./data/testReaderGameCheckTreasure.json");
         try {
-            Game game = jsonReader.loadGame();
+            Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
 
         } catch (FileNotFoundException e) {
@@ -59,7 +62,7 @@ public class JsonReaderTest {
     void testReaderGameInventory() {
         JsonReader jsonReader = new JsonReader("./data/testReaderGameInventory.json");
         try {
-            Game game = jsonReader.loadGame();
+            Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getSpawnTreasurePos());
 
             assertEquals(2, game.getInventory().getTreasures().size());
@@ -80,7 +83,7 @@ public class JsonReaderTest {
     void testReaderCoinHandlingStart() {
         JsonReader jsonReader = new JsonReader("./data/testReaderCoinHandlingStart.json");
         try {
-            Game game = jsonReader.loadGame();
+            Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
             assertEquals(new Position(1, 0), game.getCoinPosStart());
 
@@ -96,7 +99,7 @@ public class JsonReaderTest {
     void testReaderCoinHandling() {
         JsonReader jsonReader = new JsonReader("./data/testReaderCoinHandling.json");
         try {
-            Game game = jsonReader.loadGame();
+            Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
             assertEquals(new Position(2, 3), game.getCoinPos());
 
@@ -111,7 +114,7 @@ public class JsonReaderTest {
     void testReaderCoinHandlingCheck() {
         JsonReader jsonReader = new JsonReader("./data/testReaderCoinHandlingCheck.json");
         try {
-            Game game = jsonReader.loadGame();
+            Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
             assertEquals(new Position(2, 3), game.getCheckCoinPos());
 
@@ -126,9 +129,11 @@ public class JsonReaderTest {
     void testReaderEnemies() {
         JsonReader jsonReader = new JsonReader("./data/testReaderEnemies.json");
         try {
-            Game game = jsonReader.loadGame();
+            Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getSpawnTreasurePos());
             assertEquals(2, game.getEnemies().size());
+            assertEquals(10, game.getEnemies().get(0).getHp());
+            assertEquals(10, game.getEnemies().get(0).getHp());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");

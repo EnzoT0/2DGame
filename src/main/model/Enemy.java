@@ -41,4 +41,8 @@ public class Enemy {
                 + Math.pow(enemyPos.getPosY() - pos.getPosY(), 2));
         return distance < approx;
     }
+
+    public void setHp(Integer integer) {
+        hp = integer;
+    }
 }

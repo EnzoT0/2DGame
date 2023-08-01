@@ -246,7 +246,7 @@ public class TerminalGame extends JPanel {
 
     public void loadGame() {
         try {
-            game = jsonReader.loadGame();
+            game = jsonReader.loadGame(keyHandler);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

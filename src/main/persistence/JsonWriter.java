@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.Writer;
 
 // Represents a writer that writes the JSON representation of the game to a file.
 
@@ -33,7 +32,7 @@ public class JsonWriter {
         JSONArray jsonEnemies = new JSONArray();
         JSONArray jsonInventory = new JSONArray();
         for (Enemy enemy : game.getEnemies()) {
-            JSONObject jsonEnemy = getJsonEnemyPos(enemy);
+            JSONObject jsonEnemy = getJsonEnemy(enemy);
             jsonEnemies.put(jsonEnemy);
         }
 
@@ -88,10 +87,11 @@ public class JsonWriter {
     // MODIFIES: this
     // EFFECTS: puts the key, x and y, representing the enemy position into the json representation of it.
     // This will be added to the json file which will later read and decoded.
-    public JSONObject getJsonEnemyPos(Enemy enemy) {
+    public JSONObject getJsonEnemy(Enemy enemy) {
         JSONObject json = new JSONObject();
         json.put("x", enemy.getEnemyPos().getPosX());
         json.put("y", enemy.getEnemyPos().getPosY());
+        json.put("enemyHp", enemy.getHp());
         return json;
     }
 

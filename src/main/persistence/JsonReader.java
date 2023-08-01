@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 
 public class JsonReader {
     private String fileSource;
-    private GameKeyHandler keyHandler;
 
     // EFFECTS: Constructs a reader to read the file source.
     public JsonReader(String fileSource) {
@@ -33,7 +32,7 @@ public class JsonReader {
     // EFFECTS: read source files as string and parses together the information
     // needed to load the game. This includes getting the character position, enemy position, inventory,
     // treasure positions, coin positions, hp, etc.
-    public Game loadGame() throws IOException {
+    public Game loadGame(GameKeyHandler keyHandler) throws IOException {
         Game game = new Game(keyHandler);
         String jsonData = readFile(fileSource);
         JSONObject jsonObject = new JSONObject(jsonData);
@@ -44,7 +43,7 @@ public class JsonReader {
         JSONArray jsonEnemies = jsonObject.getJSONArray("enemies");
         for (int i = 0; i < jsonEnemies.length(); i++) {
             JSONObject jsonEnemy = jsonEnemies.getJSONObject(i);
-            Enemy enemy = getEnemyPos(jsonEnemy);
+            Enemy enemy = getEnemy(jsonEnemy);
             game.getEnemies().add(enemy);
         }
 
@@ -142,10 +141,13 @@ public class JsonReader {
 
     // EFFECTS: finds the key x and y from the jsonObject and returns a new enemy with said
     // position with the given information.
-    public Enemy getEnemyPos(JSONObject jsonObject) {
+    public Enemy getEnemy(JSONObject jsonObject) {
         int x = jsonObject.getInt("x");
         int y = jsonObject.getInt("y");
-        return new Enemy(new Position(x, y));
+        int enemyHp = jsonObject.getInt("enemyHp");
+        Enemy enemy = new Enemy(new Position(x, y));
+        enemy.setHp(enemyHp);
+        return enemy;
     }
 
     // EFFECTS: finds the key name from the jsonObject and returns a new treasure with the given information.
