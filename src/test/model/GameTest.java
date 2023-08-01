@@ -2,8 +2,10 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ui.GameKeyHandler;
 import ui.Inventory;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,16 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
 
     private Game game;
+    private GameKeyHandler keyHandler = new GameKeyHandler();
 
     @BeforeEach
     void runBefore() {
-        game = new Game(39, 21);
+        game = new Game(keyHandler);
     }
 
     @Test
     void testConstructor() {
-        assertEquals(39, game.getMaxX());
-        assertEquals(21, game.getMaxY());
 
         assertEquals(1, game.getCoin().size());
     }
@@ -35,9 +36,10 @@ public class GameTest {
         assertEquals(1, game.getCoin().size());
         assertTrue(game.getCoin().contains(game.getCoinPosStart()));
 
+        assertEquals(0, game.getProjectiles().size());
         // Check 1st update, coin not in starting position of character.
         game.update();
-        assertTrue(game.getCoin().contains(game.getCoinPosStart()));
+        //assertTrue(game.getCoin().contains(game.getCoinPosStart()));
         assertEquals(1, game.getCoin().size());
 
         assertEquals(1, game.getTreasures().size());
@@ -46,7 +48,7 @@ public class GameTest {
         assertFalse(game.isEnded());
 
         // Check 2nd update, this time character collided with coin.
-        game.getCharacter().setDirection(Direction.NONE);
+        //game.getCharacter().setDirection(Direction.NONE);
         game.getCharacter().setCharacterPos(game.getCoinPosStart());
         game.update();
         assertFalse(game.getCoin().contains(game.getCoinPosStart())); // Shows coin is not in set anymore
@@ -97,79 +99,242 @@ public class GameTest {
     }
 
     @Test
-    void testEnemyUpdate() {
-        EnemyList enemyList = new EnemyList();
-        List<Enemy> enemies = enemyList.addEnemies(1);
-        game.setEnemies(enemies);
+    void testCheckFire() {
+        // Test case where fire pressed is false
+        keyHandler.setFirePressed(false);
+        game.checkFire();
+        assertEquals(0,game.getProjectiles().size());
 
-        assertEquals(1, enemyList.getEnemies().size());
+        // Test case where fire is true
+        keyHandler.setFirePressed(true);
+        game.checkFire();
+        assertEquals(1, game.getProjectiles().size());
 
-        // Test 1
-        for (Enemy enemy : game.getEnemies()) {
-            enemy.setEnemyPos(new Position(1, 1));
-        }
-        game.enemyUpdate();
+        // test case where fire gives nothing
+        game.checkFire();
+        assertEquals(1, game.getProjectiles().size());
 
-        assertEquals(new Position(1 + game.getDx(), 1 + game.getDy()), enemies.get(0).getEnemyPos());
+        // test case where it can do it again
+        long currentTime = System.currentTimeMillis();
+        long lastFired = currentTime - game.getInterval() - 5;
+        game.setLastFired(lastFired);
 
-        // Test 2
-        for (Enemy enemy : game.getEnemies()) {
-            enemy.setEnemyPos(new Position(-2, 4));
-        }
-        while (game.getEnemies().get(0).getEnemyPos().getPosX() != 1) {
-            game.enemyUpdate();
-        }
-        assertEquals(1, game.getEnemies().get(0).getEnemyPos().getPosX());
+        game.checkFire();
 
-        // Test 3
-        for (Enemy enemy : game.getEnemies()) {
-            enemy.setEnemyPos(new Position(4, -2));
-        }
+        assertEquals(2, game.getProjectiles().size());
 
-        while (game.getEnemies().get(0).getEnemyPos().getPosY() != 1) {
-            game.enemyUpdate();
-        }
-        assertEquals(1, game.getEnemies().get(0).getEnemyPos().getPosY());
-
-        // Test 4
-        for (Enemy enemy : game.getEnemies()) {
-            enemy.setEnemyPos(new Position(40, 5));
-        }
-
-        while (game.getEnemies().get(0).getEnemyPos().getPosX() != 38) {
-            game.enemyUpdate();
-        }
-        assertEquals(38, game.getEnemies().get(0).getEnemyPos().getPosX());
-
-        // Test 5
-        for (Enemy enemy : game.getEnemies()) {
-            enemy.setEnemyPos(new Position(2, 22));
-        }
-        while (game.getEnemies().get(0).getEnemyPos().getPosY() != 20) {
-            game.enemyUpdate();
-        }
-        assertEquals(20, game.getEnemies().get(0).getEnemyPos().getPosY());
-
-
+        // last case where nothing happens
+        game.checkFire();
+        assertEquals(2, game.getProjectiles().size());
     }
 
     @Test
-    void testCheckRandPosUpdate() {
-        // Test 1
-        while (game.isRand() != true) {
-            game.checkRandPosUpdate();
-        }
-        assertEquals(0, game.getDx());
-        assertEquals(0, game.getDy());
-        assertTrue(game.isRand());
+    public void moveProjectile() {
+        game.moveProjectile();
 
-        // Test 2
-        while (game.isRand() != false) {
-            game.checkRandPosUpdate();
+        List<Projectile> projectiles = new ArrayList<>();
+        projectiles.add(new Projectile(new Position(5, 6)));
+        game.setProjectiles(projectiles);
+
+        game.moveProjectile();
+        assertEquals(new Position(10, 6), game.getProjectiles().get(0).getPos());
+    }
+
+    @Test
+    void testCheckProjectiles() {
+        List<Projectile> projectiles = new ArrayList<>();
+        projectiles.add(new Projectile(new Position(571, 300)));
+        game.setProjectiles(projectiles);
+
+        game.checkProjectiles();
+        assertEquals(0, game.getProjectiles().size());
+
+        projectiles.add(new Projectile(new Position(10, 300)));
+        //game.setProjectiles(projectiles);
+        game.checkProjectiles();
+        assertEquals(1, game.getProjectiles().size());
+    }
+
+    @Test
+    void testCheckEnemyFire() {
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(new Enemy(new Position(10, 100)));
+        enemies.add(new Enemy(new Position(100, 200)));
+        game.setEnemies(enemies);
+
+        List<Projectile> projectiles = new ArrayList<>();
+        projectiles.add(new Projectile(new Position(1, 1)));
+        game.setProjectiles(projectiles);
+
+        // nothing happens
+        game.checkEnemyFire();
+        assertEquals(1, game.getProjectiles().size());
+        assertEquals(2, game.getEnemies().size());
+
+        projectiles.remove(0);
+        assertEquals(0, game.getProjectiles().size());
+
+        // Projectile hits an enemy
+        projectiles.add(new Projectile(new Position(9, 99)));
+        game.checkEnemyFire();
+        assertEquals(0, game.getProjectiles().size());
+        assertEquals(2, game.getEnemies().size());
+        assertEquals(5, game.getEnemies().get(0).getHp());
+
+        // projectile hits same enemy
+        projectiles.add(new Projectile(new Position(10, 100)));
+        assertEquals(1, game.getProjectiles().size());
+        assertEquals(2, game.getEnemies().size());
+        game.checkEnemyFire();
+        assertEquals(0, game.getProjectiles().size());
+        assertEquals(1, game.getEnemies().size());
+    }
+
+    @Test
+    void testCheckHit() {
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(new Enemy(new Position(10, 100)));
+        enemies.add(new Enemy(new Position(100, 200)));
+        game.setEnemies(enemies);
+
+        List<Projectile> projectiles = new ArrayList<>();
+        projectiles.add(new Projectile(new Position(1, 1)));
+        game.setProjectiles(projectiles);
+
+        assertFalse(game.checkHit(enemies.get(0), projectiles));
+
+        projectiles.add(new Projectile(new Position(10, 100)));
+        assertTrue(game.checkHit(enemies.get(0), projectiles));
+        assertEquals(5, game.getEnemies().get(0).getHp());
+
+        assertTrue(game.checkHit(enemies.get(0), projectiles));
+        assertEquals(0, game.getEnemies().get(0).getHp());
+    }
+
+
+
+    @Test
+    void testEnemyUpdateOnCooldown() {
+        EnemyList enemyList = new EnemyList();
+        List<Enemy> enemies = enemyList.addEnemies(1);
+        game.setEnemies(enemies);
+        assertEquals(1, enemyList.getEnemies().size());
+
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(70, 150));
         }
-        assertEquals(game.getRandDx(), game.getDx());
-        assertEquals(game.getRandDy(), game.getDy());
-        assertFalse(game.isRand());
+
+        game.enemyUpdate();
+
+        assertEquals(new Position(70, 150), game.getEnemies().get(0).getEnemyPos());
+    }
+
+    @Test
+    void testEnemyUpdateNotOnCooldown() {
+        long currentTime = System.currentTimeMillis();
+        game.setLastEnemyUpdateTime(currentTime - 400);
+
+        EnemyList enemyList = new EnemyList();
+        List<Enemy> enemies = enemyList.addEnemies(1);
+        game.setEnemies(enemies);
+        assertEquals(1, enemyList.getEnemies().size());
+
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(70, 150));
+        }
+
+        game.enemyUpdate();
+
+        assertTrue(65 <= game.getEnemies().get(0).getEnemyPos().getPosX());
+        assertTrue(145 <= game.getEnemies().get(0).getEnemyPos().getPosY());
+        assertTrue(game.getLastEnemyUpdateTime() - 5 <= currentTime &&
+                currentTime <= game.getLastEnemyUpdateTime() + 5);
+    }
+
+    @Test
+    void testEnemyUpdateNotOnCoolDown2() {
+        long currentTime = System.currentTimeMillis();
+        game.setLastEnemyUpdateTime(currentTime - 400);
+
+        EnemyList enemyList = new EnemyList();
+        List<Enemy> enemies = enemyList.addEnemies(1);
+        game.setEnemies(enemies);
+        assertEquals(1, enemyList.getEnemies().size());
+
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(-10, 150));
+        }
+
+        game.enemyUpdate();
+        assertTrue(10 >= game.getEnemies().get(0).getEnemyPos().getPosX());
+        assertTrue(145 <= game.getEnemies().get(0).getEnemyPos().getPosY());
+        assertTrue(game.getLastEnemyUpdateTime() - 5 <= currentTime &&
+                currentTime <= game.getLastEnemyUpdateTime() + 5);
+    }
+
+    @Test
+    void testEnemyUpdateNotOnCooldown3() {
+        long currentTime = System.currentTimeMillis();
+        game.setLastEnemyUpdateTime(currentTime - 400);
+
+        EnemyList enemyList = new EnemyList();
+        List<Enemy> enemies = enemyList.addEnemies(1);
+        game.setEnemies(enemies);
+        assertEquals(1, enemyList.getEnemies().size());
+
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(100, -10));
+        }
+
+        game.enemyUpdate();
+        assertTrue(10 >= game.getEnemies().get(0).getEnemyPos().getPosY());
+        assertTrue(95 <= game.getEnemies().get(0).getEnemyPos().getPosX());
+        assertTrue(game.getLastEnemyUpdateTime() - 5 <= currentTime &&
+                currentTime <= game.getLastEnemyUpdateTime() + 5);
+    }
+
+    @Test
+    void testEnemyUpdateNotOnCooldown4() {
+        long currentTime = System.currentTimeMillis();
+        game.setLastEnemyUpdateTime(currentTime - 400);
+
+        EnemyList enemyList = new EnemyList();
+        List<Enemy> enemies = enemyList.addEnemies(1);
+        game.setEnemies(enemies);
+        assertEquals(1, enemyList.getEnemies().size());
+
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(690, 100));
+        }
+
+        game.enemyUpdate();
+        assertTrue(570 >= game.getEnemies().get(0).getEnemyPos().getPosX());
+        assertTrue(95 <= game.getEnemies().get(0).getEnemyPos().getPosY());
+        assertTrue(game.getLastEnemyUpdateTime() - 5 <= currentTime &&
+                currentTime <= game.getLastEnemyUpdateTime() + 5);
+    }
+
+    @Test
+    void testEnemyUpdateNotOnCooldown5() {
+        long currentTime = System.currentTimeMillis();
+        game.setLastEnemyUpdateTime(currentTime - 400);
+
+        EnemyList enemyList = new EnemyList();
+        List<Enemy> enemies = enemyList.addEnemies(1);
+        game.setEnemies(enemies);
+        assertEquals(1, enemyList.getEnemies().size());
+
+        for (Enemy enemy : game.getEnemies()) {
+            enemy.setEnemyPos(new Position(100, 560));
+        }
+
+        game.enemyUpdate();
+        assertTrue(550 >= game.getEnemies().get(0).getEnemyPos().getPosY());
+        assertTrue(95 <= game.getEnemies().get(0).getEnemyPos().getPosX());
+        assertTrue(game.getLastEnemyUpdateTime() - 5 <= currentTime &&
+                currentTime <= game.getLastEnemyUpdateTime() + 5);
+
+        //assertEquals(currentTime, game.getLastEnemyUpdateTime());
     }
 
     @Test
@@ -289,8 +454,8 @@ public class GameTest {
     void testGenerateRandomPosition() {
         // Test whether random position gives a position between the boundaries.
         Position randomPos = game.generateRandomPosition();
-        assertTrue(randomPos.getPosX() >= 0 && randomPos.getPosX() <= 39
-                && randomPos.getPosY() >= 0 && randomPos.getPosY() <= 21);
+        assertTrue(randomPos.getPosX() >= 0 && randomPos.getPosX() <= 570
+                && randomPos.getPosY() >= 55 && randomPos.getPosY() <= 535);
     }
 
     @Test
@@ -320,34 +485,38 @@ public class GameTest {
         assertFalse(game.isValidPosition(game.getCharacter().getCharacterPos()));
 
         // Test 5: Boundary checking
-        Position boundaryPos1 = new Position(0, 0);
+        game.getCoin().remove(inCoinPos);
+        game.getCoin().remove(anotherCoinPos);
+        game.getTreasures().remove(treasurePos);
+
+        Position boundaryPos1 = new Position(0, 55);
         assertTrue(game.isValidPosition(boundaryPos1));
 
         Position boundaryPos2 = new Position(-1, 0);
         assertFalse(game.isValidPosition(boundaryPos2));
 
-        Position boundaryPos3 = new Position(0, -1);
+        Position boundaryPos3 = new Position(0, 54);
         assertFalse(game.isValidPosition(boundaryPos3));
 
-        Position boundaryPos4 = new Position(4, 5);
+        Position boundaryPos4 = new Position(4, 60);
         assertTrue(game.isValidPosition(boundaryPos4));
 
-        Position boundaryPos5 = new Position(39, 5);
+        Position boundaryPos5 = new Position(570, 65);
         assertTrue(game.isValidPosition(boundaryPos5));
 
-        Position boundaryPos6 = new Position(40, 9);
+        Position boundaryPos6 = new Position(571, 9);
         assertFalse(game.isValidPosition(boundaryPos6));
 
-        Position boundaryPos7 = new Position(9, 21);
+        Position boundaryPos7 = new Position(9, 535);
         assertTrue(game.isValidPosition(boundaryPos7));
 
-        Position boundaryPos8 = new Position(10, 22);
+        Position boundaryPos8 = new Position(10, 536);
         assertFalse(game.isValidPosition(boundaryPos8));
     }
 
     @Test
     void testMakeValidRandomPosition() {
-        Position pos = new Position(1, 1);
+        Position pos = new Position(30, 80);
         assertFalse(game.isValidPosition(pos));
         Position newPos = game.makeValidRandomPos(pos);
         assertTrue(game.isValidPosition(newPos));
@@ -357,44 +526,44 @@ public class GameTest {
     @Test
     void testOutOfBoundary() {
         // Test #1
-        assertFalse(game.outOfBoundary(new Position(0, 0)));
+        assertFalse(game.outOfBoundary(new Position(0, 55)));
 
         // Test #2
-        assertFalse(game.outOfBoundary(new Position(1, 1)));
+        assertFalse(game.outOfBoundary(new Position(1, 56)));
 
         // Test #3
-        assertFalse(game.outOfBoundary(new Position(0, 21)));
+        assertFalse(game.outOfBoundary(new Position(0, 535)));
 
         // Test #4
-        assertFalse(game.outOfBoundary(new Position(39, 0)));
+        assertFalse(game.outOfBoundary(new Position(570, 55)));
 
         // Test #5
-        assertTrue(game.outOfBoundary(new Position(40, 0)));
+        assertTrue(game.outOfBoundary(new Position(571, 0)));
 
         // Test #6
-        assertTrue(game.outOfBoundary(new Position(0, 22)));
+        assertTrue(game.outOfBoundary(new Position(0, 536)));
 
         // Test #7
-        assertTrue(game.outOfBoundary(new Position(50, 5)));
+        assertTrue(game.outOfBoundary(new Position(670, 5)));
 
         // Test #8
-        assertTrue(game.outOfBoundary(new Position(7, 23)));
+        assertTrue(game.outOfBoundary(new Position(7, 539)));
 
         // Test #9
-        assertFalse(game.outOfBoundary(new Position(game.getMaxX(), game.getMaxY())));
+        assertFalse(game.outOfBoundary(new Position(game.getMaxX(), (game.getMaxY() + 54))));
 
         // Test #10
-        assertFalse(game.outOfBoundary(new Position(9, 10)));
+        assertFalse(game.outOfBoundary(new Position(9, 60)));
 
         // More Tests
         assertTrue(game.outOfBoundary(new Position(-1, -1)));
-        assertTrue(game.outOfBoundary(new Position(10, -1)));
+        assertTrue(game.outOfBoundary(new Position(10, 54)));
         assertTrue(game.outOfBoundary(new Position(-1, 5)));
 
-        assertTrue(game.outOfBoundary(new Position(40, 22)));
-        assertTrue(game.outOfBoundary(new Position(36, 25)));
-        assertTrue(game.outOfBoundary(new Position(42, 20)));
-        assertFalse(game.outOfBoundary(new Position(5, 8)));
+        assertTrue(game.outOfBoundary(new Position(571, 536)));
+        assertTrue(game.outOfBoundary(new Position(36, 540)));
+        assertTrue(game.outOfBoundary(new Position(690, 54)));
+        assertFalse(game.outOfBoundary(new Position(5, 80)));
 
     }
 

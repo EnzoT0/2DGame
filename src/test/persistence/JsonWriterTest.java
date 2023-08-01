@@ -2,8 +2,10 @@ package persistence;
 
 import model.*;
 import org.junit.jupiter.api.Test;
+import ui.GameKeyHandler;
 import ui.Inventory;
 
+import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -12,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class JsonWriterTest {
+    private GameKeyHandler keyHandler = new GameKeyHandler();
 
     @Test
     void testWriterInvalidFile() {
@@ -27,7 +30,7 @@ public class JsonWriterTest {
     @Test
     void testGameSpawnTreasure() {
         try {
-            Game game = new Game(39, 21);
+            Game game = new Game(keyHandler);
 /*            EnemyList enemyList = new EnemyList();
             List<Enemy> enemies = enemyList.addEnemies(1);
             game.setEnemies(enemies);*/
@@ -55,7 +58,7 @@ public class JsonWriterTest {
     @Test
     void testGameCheckTreasure() {
         try {
-            Game game = new Game(39, 21);
+            Game game = new Game(keyHandler);
 
             Position pos = new Position(1, 3);
             game.setCheckTreasurePos(pos);
@@ -80,7 +83,7 @@ public class JsonWriterTest {
     @Test
     void testGameInventory() {
         try {
-            Game game = new Game(39, 21);
+            Game game = new Game(keyHandler);
 
             Position pos = new Position(1, 3);
             game.setSpawnTreasurePos(pos);
@@ -116,7 +119,7 @@ public class JsonWriterTest {
     @Test
     void testCoinHandlingStart() {
         try {
-            Game game = new Game(39, 21);
+            Game game = new Game(keyHandler);
 
             Position pos = new Position(1, 3);
             game.setCheckTreasurePos(pos);
@@ -144,7 +147,7 @@ public class JsonWriterTest {
     @Test
     void testCoinHandling() {
         try {
-            Game game = new Game(39, 21);
+            Game game = new Game(keyHandler);
 
             Position pos = new Position(1, 3);
             game.setCheckTreasurePos(pos);
@@ -175,7 +178,7 @@ public class JsonWriterTest {
     @Test
     void testCoinHandlingCheck() {
         try {
-            Game game = new Game(39, 21);
+            Game game = new Game(keyHandler);
 
             Position pos = new Position(1, 3);
             game.setCheckTreasurePos(pos);
@@ -206,7 +209,7 @@ public class JsonWriterTest {
     @Test
     void testEnemies() {
         try {
-            Game game = new Game(39, 21);
+            Game game = new Game(keyHandler);
             EnemyList enemyList = new EnemyList();
             List<Enemy> enemies = enemyList.addEnemies(2);
             game.setEnemies(enemies);

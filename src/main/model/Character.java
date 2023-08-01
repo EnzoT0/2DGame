@@ -2,16 +2,18 @@ package model;
 
 // Character class represents the controllable character.
 
+import ui.GameKeyHandler;
+
 public class Character {
     private Position characterPos;
-    private Direction direction;
+    //private Direction direction;
     private int hp;
 
 
     // EFFECTS: Constructs a character with a set position, direction and hp
     public Character() {
-        this.characterPos = new Position(1, 1);
-        this.direction = Direction.RIGHT;
+        this.characterPos = new Position(30, 80);
+/*        this.direction = Direction.RIGHT;*/
         this.hp = 100;
     }
 
@@ -19,25 +21,53 @@ public class Character {
     // MODIFIES: this
     // EFFECTS: Checks if a character has collided with the borders, and if so, then return without modifying this.
     // If no collusion occurs, move character.
-    public void move() {
-        if (hasCollidedR(direction.move(characterPos))) {
-            return;
-        }
-        characterPos = direction.move(characterPos);
+    public void move(GameKeyHandler keyHandler) {
+        handleUserInput(keyHandler);
+    }
 
+    public void handleUserInput(GameKeyHandler keyHandler) {
+        if (keyHandler.isUpPressed() == true) {
+            if (characterPos.getPosY() <= 55) {
+                return;
+            }
+            setCharacterPos(new Position(characterPos.getPosX(), characterPos.getPosY() - 4));
+        } else if (keyHandler.isDownPressed() == true) {
+            if (characterPos.getPosY() > 535) {
+                return;
+            }
+            setCharacterPos(new Position(characterPos.getPosX(), characterPos.getPosY() + 4));
+        } else if (keyHandler.isRightPressed() == true) {
+            if (characterPos.getPosX() > 570) {
+                return;
+            }
+            setCharacterPos(new Position(characterPos.getPosX() + 4, characterPos.getPosY()));
+        } else if (keyHandler.isLeftPressed() == true) {
+            if (characterPos.getPosX() <= 0) {
+                return;
+            }
+            setCharacterPos(new Position(characterPos.getPosX() - 4, characterPos.getPosY()));
+        }
+    }
+
+    public boolean hasCollided(Position pos) {
+        double approx = 15;
+        double distance = Math.sqrt(Math.pow(characterPos.getPosX() - pos.getPosX(), 2)
+                + Math.pow(characterPos.getPosY() - pos.getPosY(), 2));
+        return distance < approx;
     }
 
 
-    // EFFECTS: Returns a boolean, either a true or false, depending on whether the position is over the borders.
+/*    // EFFECTS: Returns a boolean, either a true or false, depending on whether the position is over the borders.
     public boolean hasCollidedR(Position pos) {
         return pos.getPosX() < 0 || pos.getPosY() < 0 || pos.getPosX() > 39
                 || pos.getPosY() > 21;
-    }
+    }*/
 
-    // EFFECTS: Returns a boolean, either a true or false, depending on whether the character collided with something.
+/*    // EFFECTS: Returns a boolean, either a true or false, depending on whether the character collided with something.
     public boolean hasCollided(Position pos) {
         return characterPos.equals(pos);
-    }
+    }*/
+
 
     // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0.
     // MODIFIES: this
@@ -49,11 +79,11 @@ public class Character {
         }
     }
 
-    // MODIFIES: this
+/*    // MODIFIES: this
     // EFFECTS: set the direction to given input.
     public void setDirection(Direction dir) {
         direction = dir;
-    }
+    }*/
 
     // EFFECTS: return character position.
     public Position getCharacterPos() {
@@ -78,10 +108,10 @@ public class Character {
         return hp;
     }
 
-    // EFFECTS: Return direction of the character.
+/*    // EFFECTS: Return direction of the character.
     public Direction getDirection() {
         return direction;
-    }
+    }*/
 
     // REQUIRES: hp >= 0.
     // MODIFIES: this

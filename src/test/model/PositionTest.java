@@ -29,6 +29,9 @@ public class PositionTest {
         Position pos = new Position(5, 10);
         assertTrue(pos.equals(new Position(5, 10)));
 
+        Position newPos1 = new Position(1, 5);
+        assertTrue(newPos1.equals(newPos1));
+
         // Test same class but different variables with same parameters
         Position samePos1 = new Position(2, 3);
         Position samePos2 = new Position(2, 3);

@@ -1,3 +1,4 @@
+/*
 package ui;
 
 import model.*;
@@ -28,18 +29,32 @@ public class TerminalGame extends JPanel {
     private JsonReader jsonReader = new JsonReader(SAVE_FILE_PATH);
     private static final String SAVE_FILE_PATH = "./data/game_save.json";
 
-    final int tileSize = 36;
+    /// Screen setting
+    final int originalTileSize = 12; // 12x12 tile
+    final int scale = 3;
 
-    final int screenWidth = 720;
-    final int screenHeight = 576;
+    final int tileSize = originalTileSize * scale;
+
+    final int maxX = 20;
+    final int maxY = 16;
+    final int screenWidth = tileSize * maxX;
+    final int screenHeight = tileSize * maxY;
+
+    // int framesPerSecond = 60;
 
     GameKeyHandler keyHandler = new GameKeyHandler();
+    // Thread gameThread;
 
     private Game game = new Game(keyHandler);
     private int currentHP;
     private int maxHP;
 
     private boolean isPaused = false;
+    private boolean menuOpen = false;
+
+    private MenuPanel menuPanel = new MenuPanel(game);
+    private JButton menuButton;
+
 
     public TerminalGame() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -50,7 +65,7 @@ public class TerminalGame extends JPanel {
         this.addKeyListener(keyHandler);
 
         addMultiPurposeCheck();
-        
+
         this.setFocusable(true);
     }
 
@@ -103,9 +118,9 @@ public class TerminalGame extends JPanel {
         drawTreasures(g);
         drawProjectile(g);
 
-/*        if (menuOpen) {
+        if (menuOpen) {
             menuPanel.paintComponent(g);
-        }*/
+        }
 
         if (game.isEnded()) {
             drawEndScreen(g);
@@ -121,6 +136,10 @@ public class TerminalGame extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     checkState();
+                    // Inventory for now but the one supposed to be here is toggleMenuPanel.
+                    if (!game.isEnded()) {
+                        add(menuPanel);
+                    }
                 }
                 if (e.getKeyCode() == KeyEvent.VK_E) {
                     if (game.isEnded()) {
@@ -142,8 +161,10 @@ public class TerminalGame extends JPanel {
     public void checkState() {
         if (isPaused) {
             isPaused = false;
+            menuOpen = false;
         } else if (!isPaused) {
             isPaused = true;
+            menuOpen = true;
         }
     }
 
@@ -252,8 +273,4 @@ public class TerminalGame extends JPanel {
         }
     }
 
-    public Game getGame() {
-        return game;
-    }
-
-}
+}*/

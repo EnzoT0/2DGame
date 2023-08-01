@@ -6,6 +6,7 @@ import model.Position;
 import model.Treasure;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ui.GameKeyHandler;
 import ui.Inventory;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 
 public class JsonReader {
     private String fileSource;
+    private GameKeyHandler keyHandler;
 
     // EFFECTS: Constructs a reader to read the file source.
     public JsonReader(String fileSource) {
@@ -32,7 +34,7 @@ public class JsonReader {
     // needed to load the game. This includes getting the character position, enemy position, inventory,
     // treasure positions, coin positions, hp, etc.
     public Game loadGame() throws IOException {
-        Game game = new Game(39, 21);
+        Game game = new Game(keyHandler);
         String jsonData = readFile(fileSource);
         JSONObject jsonObject = new JSONObject(jsonData);
 

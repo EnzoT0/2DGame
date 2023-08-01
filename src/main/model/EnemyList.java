@@ -14,11 +14,12 @@ public class EnemyList {
 
     // MODIFIES: this
     // EFFECTS: adds x amount of enemies, each with a given position, into a list of enemies.
+    // MODIFIED THIS: BOUNDARIES TESTS ADD
     public List<Enemy> addEnemies(int numEnemies) {
         enemies = new ArrayList<>();
         for (int i = 0; i < numEnemies; i++) {
-            int x = random.nextInt(40);
-            int y = random.nextInt(22);
+            int x = random.nextInt(571);
+            int y = random.nextInt(481) + 55;
             enemies.add(new Enemy(new Position(x, y)));
         }
         return enemies;

@@ -1,5 +1,6 @@
 package model;
 
+import ui.GameKeyHandler;
 import ui.Inventory;
 
 import java.util.*;
@@ -15,11 +16,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Game {
 
-    private final Character character = new Character();
-    public static final int TPS = 10;
+    private Character character;
+/*    public static final int TPS = 10;*/
     private boolean ended = false;
-    private final int maxX;
-    private final int maxY;
+
     private Set<Position> coin = new HashSet<>();
     private Set<Position> treasures = new HashSet<>();
     private int coinAmount;
@@ -32,23 +32,39 @@ public class Game {
     private Position spawnTreasurePos;
     private Position checkTreasurePos;
 
-    private int dx;
-    private int dy;
+/*    private int dx;
+    private int dy;*/
+
     private final Random rand = new Random();
     private List<Enemy> enemies = new ArrayList<>();
 
-    private boolean isRand;
+/*    private boolean isRand;
     private int randDx;
-    private int randDy;
+    private int randDy;*/
 
+    private GameKeyHandler keyHandler;
+
+    private int maxX = 570;
+    private int maxY = 481;
+
+    private int minY = 55;
+
+    private long lastEnemyUpdateTime = System.currentTimeMillis();
+    private static final long ENEMY_UPDATE_CD = 300;
+
+    private List<Projectile> projectiles = new ArrayList<>();
+
+    private long lastFired = 0;
+    private long interval = 1000;
 
     // EFFECTS: Constructs a game with a max X and max Y.
     // Generates a coin at a random location in the board.
-    public Game(int maxX, int maxY) {
-        this.maxX = maxX;
-        this.maxY = maxY;
+    public Game(GameKeyHandler keyHandler) {
+        this.keyHandler = keyHandler;
+        this.character = new Character();
 
         Position pos = generateRandomPosition();
+        makeValidRandomPos(pos);
         coin.add(pos);
         coinPosStart = pos;
     }
@@ -57,8 +73,12 @@ public class Game {
     // EFFECTS: Progresses the game state, moving the character, adding an infinite amount of coins and treasures
     // and handling them. Checks how the game ends as well when hp = 0.
     public void update() {
-        character.move();
+        checkFire(); // ADDED, need Tests
+        moveProjectile(); // ADDED, need TESTS
+        character.move(keyHandler);
         enemyUpdate();
+
+        checkProjectiles(); // ADDED, need TESTS
 
         checkCoin();
 
@@ -72,51 +92,60 @@ public class Game {
             spawnTreasure();
         }
 
+        checkEnemyFire(); // ADDED, need TESTS
+
+        // bossEnemyUpdate
+
         if (getCharacter().getHp() <= 0) {
             ended = true;
         }
     }
 
-    // MODIFIES: enemies
-    // EFFECTS: Updates the enemy movement and sets its new position on the board. It has a
-    // higher probability of not moving at all but there still is a chance of moving.
-    // It also checks for character collision.
-    public void enemyUpdate() {
-        for (Enemy enemy : enemies) {
-            checkRandPosUpdate();
-            int newPosX = enemy.getEnemyPos().getPosX() + dx;
-            int newPosY = enemy.getEnemyPos().getPosY() + dy;
-            if (newPosX >= 39) {
-                newPosX = 39 - 1;
-            } else if (newPosY >= 21) {
-                newPosY = 21 - 1;
-            } else if (newPosX < 0) {
-                newPosX += 1;
-            } else if (newPosY < 0) {
-                newPosY += 1;
+    // ADDED, need TESTS
+    public void checkFire() {
+        if (keyHandler.isFirePressed()) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastFired >= interval) {
+                Projectile projectile = new Projectile(character.getCharacterPos());
+                projectiles.add(projectile);
+                lastFired = currentTime;
             }
-            Position pos = new Position(newPosX, newPosY);
-            enemy.setEnemyPos(pos);
-            getCharacter().checkCollision(pos);
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: If rand.nextDouble() is less than 70%, then position will not move, else it will move from
-    // -1 to 1, depending on the random number it gets.
-    public void checkRandPosUpdate() {
-        if (rand.nextDouble() < 0.7) {
-            dx = 0;
-            dy = 0;
-            isRand = true;
-        } else {
-            randDx = rand.nextInt(3) - 1;
-            randDy = rand.nextInt(3) - 1;
-            dx = randDx;
-            dy = randDy;
-            isRand = false;
+    public void enemyUpdate() {
+        long currentTime = System.currentTimeMillis();
+        long elapsedTimeSinceLastUpdate = currentTime - lastEnemyUpdateTime;
+
+        if (elapsedTimeSinceLastUpdate >= ENEMY_UPDATE_CD) {
+            for (model.Enemy enemy : enemies) {
+                int newPosX = enemy.getEnemyPos().getPosX() + (rand.nextInt(11) - 5);
+                int newPosY = enemy.getEnemyPos().getPosY() + (rand.nextInt(11) - 5);
+                if (newPosX > maxX) {
+                    newPosX = maxX - 15;
+                } else if (newPosY > 535) {
+                    newPosY = 535 - 15;
+                } else if (newPosX < 0) {
+                    newPosX += 15;
+                } else if (newPosY < minY) {
+                    newPosY += 15;
+                }
+                Position pos = new Position(newPosX, newPosY);
+                enemy.setEnemyPos(pos);
+                getCharacter().checkCollision(pos);
+                lastEnemyUpdateTime = currentTime;
+            }
         }
     }
+
+    // ADDED, need TESTS
+    public void moveProjectile() {
+        for (Projectile projectile : projectiles) {
+            projectile.movePos();
+        }
+    }
+
+
 
 
     // MODIFIES: this
@@ -143,13 +172,56 @@ public class Game {
         spawnTreasurePos = pos;
     }
 
-    // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0 for the position.
+    // REQUIRES: maxX >= x >= 0 and maxY >= y >= minY for the position.
     // EFFECTS: Makes a valid random position.
     public Position makeValidRandomPos(Position pos) {
         while (!isValidPosition(pos)) {
             pos = generateRandomPosition();
         }
         return pos;
+    }
+
+    // ADDED, need TESTS
+    public void checkProjectiles() {
+        List<Projectile> removeProjectileList = new ArrayList<>();
+
+        for (Projectile projectile : projectiles) {
+            if (outOfBoundary(projectile.getPos())) {
+                removeProjectileList.add(projectile);
+            }
+        }
+
+        projectiles.removeAll(removeProjectileList);
+    }
+
+    // ADDED, need TESTS
+    public void checkEnemyFire() {
+        List<Projectile> badProjectiles = new ArrayList<>();
+        List<Enemy> badEnemies = new ArrayList<>();
+
+        for (Enemy enemy : enemies) {
+            if (checkHit(enemy, badProjectiles)) {
+                if (enemy.getHp() <= 0) {
+                    badEnemies.add(enemy);
+                }
+            }
+        }
+
+        projectiles.removeAll(badProjectiles);
+        enemies.removeAll(badEnemies);
+
+    }
+
+    // ADDED, need TESTS
+    public boolean checkHit(Enemy enemy, List<Projectile> badProjectiles) {
+        for (Projectile projectile : projectiles) {
+            if (enemy.hasCollided(projectile.getPos())) {
+                badProjectiles.add(projectile);
+                enemy.minusHp();
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -161,12 +233,9 @@ public class Game {
         if (coinsEarned == null) {
             return;
         }
-
         coin.remove(coinsEarned);
         coinAmount++;
         checkCoinPos = coinsEarned;
-
-
     }
 
     // MODIFIES: this, treasure
@@ -177,20 +246,25 @@ public class Game {
         if (checkTreasures == null) {
             return;
         }
-
         treasures.remove(checkTreasures);
         inventory.addTreasure(new Treasure(treasure.whatTreasure()));
         checkTreasurePos = checkTreasures;
     }
 
 
-    // EFFECTS: Generates a random position, which is guaranteed to be in bounds but not necessary valid.
+/*    // EFFECTS: Generates a random position, which is guaranteed to be in bounds but not necessary valid.
     public Position generateRandomPosition() {
         return new Position(ThreadLocalRandom.current().nextInt(40),
                 ThreadLocalRandom.current().nextInt(22));
+    }*/
+
+    // EFFECTS: Generates a random position, which is guaranteed to be in bounds but not necessary valid.
+    public Position generateRandomPosition() {
+        return new Position(ThreadLocalRandom.current().nextInt(maxX + 1),
+                ThreadLocalRandom.current().nextInt(maxY + 1) + 55);
     }
 
-    // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0 for the position.
+    // REQUIRES: maxX >= x >= 0 and maxY >= y >= minY for the position.
     // EFFECTS: Returns whether a given position is in the boundary and not occupied.
     public boolean isValidPosition(Position pos) {
         return !outOfBoundary(pos)
@@ -201,7 +275,7 @@ public class Game {
 
     // EFFECTS: Returns true when a position is out of boundary.
     public boolean outOfBoundary(Position pos) {
-        return pos.getPosX() < 0 || pos.getPosY() < 0 || pos.getPosX() > maxX || pos.getPosY() > maxY;
+        return pos.getPosX() < 0 || pos.getPosY() < minY || pos.getPosX() > maxX || pos.getPosY() > (maxY + 54);
     }
 
     // MODIFIES: this
@@ -246,7 +320,7 @@ public class Game {
         return treasures;
     }
 
-    // EFFECTS: returns dx.
+/*    // EFFECTS: returns dx.
     public int getDx() {
         return dx;
     }
@@ -254,9 +328,9 @@ public class Game {
     // EFFECTS: returns dy.
     public int getDy() {
         return dy;
-    }
+    }*/
 
-    // EFFECTS: returns whether isRand is true or false.
+/*    // EFFECTS: returns whether isRand is true or false.
     public boolean isRand() {
         return isRand;
     }
@@ -269,7 +343,7 @@ public class Game {
     // EFFECTS: Returns the random Dy.
     public int getRandDy() {
         return randDy;
-    }
+    }*/
 
     // MODIFIES: this
     // EFFECTS: sets the set of treasures to the given input.
@@ -351,5 +425,31 @@ public class Game {
     // EFFECTS: returns the position of checkTreasures in checkTreasure. Mainly for testing purposes.
     public Position getCheckTreasurePos() {
         return checkTreasurePos;
+    }
+
+    public long getLastEnemyUpdateTime() {
+        return lastEnemyUpdateTime;
+    }
+
+    public void setLastEnemyUpdateTime(long c) {
+        lastEnemyUpdateTime = c;
+    }
+
+    // ADDED, need Tests
+    public List<Projectile> getProjectiles() {
+        return projectiles;
+    }
+
+    // ADDED, need TESTS
+    public void setProjectiles(List<Projectile> projectiles) {
+        this.projectiles = projectiles;
+    }
+
+    public void setLastFired(Long e) {
+        lastFired = e;
+    }
+
+    public long getInterval() {
+        return interval;
     }
 }
