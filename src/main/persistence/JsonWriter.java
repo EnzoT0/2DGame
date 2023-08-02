@@ -72,6 +72,7 @@ public class JsonWriter {
     public void hpCoinCheck(Game game, JSONObject json) {
         json.put("hp", game.getCharacter().getHp());
         json.put("coinAmount", game.getCoinAmount());
+        json.put("charAtk", game.getCharacter().getAtk());
     }
 
     // MODIFIES: this

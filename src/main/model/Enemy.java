@@ -12,7 +12,7 @@ public class Enemy {
     // ADDED CONSTRUCTOR HP NEED TESTS
     public Enemy(Position pos) {
         enemyPos = pos;
-        hp = 10;
+        hp = 20;
     }
 
     // EFFECTS: returns enemy position.
@@ -31,8 +31,8 @@ public class Enemy {
         return hp;
     }
 
-    public void minusHp() {
-        hp -= 5;
+    public void minusHp(Integer integer) {
+        hp = hp - integer;
     }
 
     public boolean hasCollided(Position pos) {

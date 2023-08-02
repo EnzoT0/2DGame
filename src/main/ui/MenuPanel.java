@@ -9,30 +9,22 @@ public class MenuPanel extends JPanel {
 
     private TerminalGame terminalGame;
 
-    private int space = 5;
-
     public MenuPanel(TerminalGame terminalGame) {
         this.terminalGame = terminalGame;
         setBackground(Color.white);
 
-        setLayout(new GridLayout(10, 1));
+        setLayout(new GridLayout(5, 1, 0, 20));
         JButton inventoryButton = new JButton("Inventory");
         inventoryButton.addActionListener(e -> displayInventory());
         add(inventoryButton);
-
-        add(Box.createHorizontalStrut(space));
 
         JButton pauseGame = new JButton("Pause Game");
         pauseGame.addActionListener(e -> changeState());
         add(pauseGame);
 
-        add(Box.createHorizontalStrut(space));
-
         JButton saveGame = new JButton("Save Game");
         saveGame.addActionListener(e -> save());
         add(saveGame);
-
-        add(Box.createHorizontalStrut(space));
 
         JButton loadGame = new JButton("Load Game");
         loadGame.addActionListener(e -> load());
@@ -41,7 +33,9 @@ public class MenuPanel extends JPanel {
     }
 
     public void displayInventory() {
-        System.out.println("displayed inventory");
+        InventoryPanel inventoryPanel = new InventoryPanel(terminalGame, terminalGame.getGame().getInventory());
+        inventoryPanel.setVisible(true);
+        terminalGame.setPaused(true);
         terminalGame.getGame().getInventory().displayInventory();
         terminalGame.requestFocusInWindow();
     }

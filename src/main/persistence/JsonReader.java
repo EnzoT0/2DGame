@@ -128,8 +128,10 @@ public class JsonReader {
     public void checkAmount(Game game, JSONObject jsonObject) {
         int hp = jsonObject.getInt("hp");
         int coinAmount = jsonObject.getInt("coinAmount");
+        int atk = jsonObject.getInt("charAtk");
         game.getCharacter().setHp(hp);
         game.setCoinAmount(coinAmount);
+        game.getCharacter().setAtk(atk);
     }
 
     // EFFECTS: finds the key x and y from the jsonObject and returns a new position with the given information.

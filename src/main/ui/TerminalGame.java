@@ -256,4 +256,9 @@ public class TerminalGame extends JPanel {
         return game;
     }
 
+    public void setPaused(Boolean b) {
+        isPaused = b;
+    }
+
+
 }

@@ -143,4 +143,14 @@ public class CharacterTest {
         testCharacter.checkCollision(new Position(2, 4));
         assertEquals(85, testCharacter.getHp());
     }
+
+    @Test
+    public void atkHpCheck() {
+        assertEquals(5, testCharacter.getAtk());
+        testCharacter.setAtk(6);
+        assertEquals(6, testCharacter.getAtk());
+        assertEquals(100, testCharacter.getHp());
+        testCharacter.setHp(50);
+        assertEquals(50, testCharacter.getHp());
+    }
 }

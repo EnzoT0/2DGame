@@ -47,6 +47,8 @@ public class JsonWriterTest {
             JsonReader jsonReader = new JsonReader("./data/testNewGame.json");
             game = jsonReader.loadGame(keyHandler);
             assertEquals(pos, game.getSpawnTreasurePos());
+            assertEquals(5, game.getCharacter().getAtk());
+
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -72,6 +74,8 @@ public class JsonWriterTest {
             JsonReader jsonReader = new JsonReader("./data/testNewGame2.json");
             game = jsonReader.loadGame(keyHandler);
             assertEquals(pos, game.getCheckTreasurePos());
+            assertEquals(5, game.getCharacter().getAtk());
+
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -108,6 +112,8 @@ public class JsonWriterTest {
             assertEquals("Elysia", game.getInventory().getTreasures().get(1).getName());
             assertEquals(1, game.getInventory().getTreasures().get(0).getQuantity());
             assertEquals(1, game.getInventory().getTreasures().get(1).getQuantity());
+            assertEquals(5, game.getCharacter().getAtk());
+
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -135,6 +141,8 @@ public class JsonWriterTest {
             game = jsonReader.loadGame(keyHandler);
             assertEquals(pos, game.getCheckTreasurePos());
             assertEquals(coinSpawnPos, game.getCoinPosStart());
+            assertEquals(5, game.getCharacter().getAtk());
+
 
 
         } catch (FileNotFoundException e) {
@@ -167,6 +175,7 @@ public class JsonWriterTest {
             game = jsonReader.loadGame(keyHandler);
             assertEquals(pos, game.getCheckTreasurePos());
             assertEquals(coinPos, game.getCoinPos());
+            assertEquals(5, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -188,6 +197,7 @@ public class JsonWriterTest {
             Position coinPos = new Position(2, 3);
             game.setCheckCoinPos(coinPos);
             game.getCoin().add(coinPos);
+            game.getCharacter().setAtk(6);
 
             JsonWriter jsonWriter = new JsonWriter("./data/testCoinHandling3.json");
             jsonWriter.open();
@@ -198,6 +208,7 @@ public class JsonWriterTest {
             game = jsonReader.loadGame(keyHandler);
             assertEquals(pos, game.getCheckTreasurePos());
             assertEquals(coinPos, game.getCheckCoinPos());
+            assertEquals(6, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -227,9 +238,9 @@ public class JsonWriterTest {
             game = jsonReader.loadGame(keyHandler);
             assertEquals(pos, game.getSpawnTreasurePos());
             assertEquals(2, game.getEnemies().size());
-            assertEquals(10, game.getEnemies().get(0).getHp());
-            assertEquals(10, game.getEnemies().get(1).getHp());
-
+            assertEquals(20, game.getEnemies().get(0).getHp());
+            assertEquals(20, game.getEnemies().get(1).getHp());
+            assertEquals(5, game.getCharacter().getAtk());
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
         } catch (IOException e) {

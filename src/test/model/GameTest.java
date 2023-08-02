@@ -179,7 +179,7 @@ public class GameTest {
         game.checkEnemyFire();
         assertEquals(0, game.getProjectiles().size());
         assertEquals(2, game.getEnemies().size());
-        assertEquals(5, game.getEnemies().get(0).getHp());
+        assertEquals(15, game.getEnemies().get(0).getHp());
 
         // projectile hits same enemy
         projectiles.add(new Projectile(new Position(10, 100)));
@@ -187,6 +187,11 @@ public class GameTest {
         assertEquals(2, game.getEnemies().size());
         game.checkEnemyFire();
         assertEquals(0, game.getProjectiles().size());
+        assertEquals(2, game.getEnemies().size());
+        projectiles.add(new Projectile(new Position(10, 100)));
+        game.checkEnemyFire();
+        projectiles.add(new Projectile(new Position(10, 100)));
+        game.checkEnemyFire();
         assertEquals(1, game.getEnemies().size());
     }
 
@@ -205,10 +210,10 @@ public class GameTest {
 
         projectiles.add(new Projectile(new Position(10, 100)));
         assertTrue(game.checkHit(enemies.get(0), projectiles));
-        assertEquals(5, game.getEnemies().get(0).getHp());
+        assertEquals(15, game.getEnemies().get(0).getHp());
 
         assertTrue(game.checkHit(enemies.get(0), projectiles));
-        assertEquals(0, game.getEnemies().get(0).getHp());
+        assertEquals(10, game.getEnemies().get(0).getHp());
     }
 
 

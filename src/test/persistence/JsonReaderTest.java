@@ -33,6 +33,7 @@ public class JsonReaderTest {
         try {
             Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getSpawnTreasurePos());
+            assertEquals(5, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -49,6 +50,7 @@ public class JsonReaderTest {
         try {
             Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
+            assertEquals(5, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -70,6 +72,7 @@ public class JsonReaderTest {
             assertEquals("Elysia", game.getInventory().getTreasures().get(1).getName());
             assertEquals(1, game.getInventory().getTreasures().get(0).getQuantity());
             assertEquals(1, game.getInventory().getTreasures().get(1).getQuantity());
+            assertEquals(5, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -85,7 +88,8 @@ public class JsonReaderTest {
         try {
             Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
-            assertEquals(new Position(1, 0), game.getCoinPosStart());
+            assertEquals(new Position(116, 429), game.getCoinPosStart());
+            assertEquals(5, game.getCharacter().getAtk());
 
 
         } catch (FileNotFoundException e) {
@@ -102,6 +106,7 @@ public class JsonReaderTest {
             Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
             assertEquals(new Position(2, 3), game.getCoinPos());
+            assertEquals(5, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -117,6 +122,7 @@ public class JsonReaderTest {
             Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getCheckTreasurePos());
             assertEquals(new Position(2, 3), game.getCheckCoinPos());
+            assertEquals(6, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
@@ -132,8 +138,9 @@ public class JsonReaderTest {
             Game game = jsonReader.loadGame(keyHandler);
             assertEquals(new Position(1, 3), game.getSpawnTreasurePos());
             assertEquals(2, game.getEnemies().size());
-            assertEquals(10, game.getEnemies().get(0).getHp());
-            assertEquals(10, game.getEnemies().get(0).getHp());
+            assertEquals(20, game.getEnemies().get(0).getHp());
+            assertEquals(20, game.getEnemies().get(0).getHp());
+            assertEquals(5, game.getCharacter().getAtk());
 
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");

@@ -17,7 +17,7 @@ public class EnemyTest {
     @Test
     void testConstructor() {
         assertEquals(new Position(5, 6), enemy.getEnemyPos());
-        assertEquals(10, enemy.getHp());
+        assertEquals(20, enemy.getHp());
     }
 
     @Test
@@ -41,16 +41,16 @@ public class EnemyTest {
 
     @Test
     void testMinusHp() {
+        assertEquals(20, enemy.getHp());
+        enemy.minusHp(5);
+        assertEquals(15, enemy.getHp());
+        enemy.minusHp(5);
         assertEquals(10, enemy.getHp());
-        enemy.minusHp();
-        assertEquals(5, enemy.getHp());
-        enemy.minusHp();
-        assertEquals(0, enemy.getHp());
     }
 
     @Test
     void testSetHp() {
-        assertEquals(10, enemy.getHp());
+        assertEquals(20, enemy.getHp());
         enemy.setHp(5);
         assertEquals(5, enemy.getHp());
         enemy.setHp(0);

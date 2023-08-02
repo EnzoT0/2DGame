@@ -217,7 +217,7 @@ public class Game {
         for (Projectile projectile : projectiles) {
             if (enemy.hasCollided(projectile.getPos())) {
                 badProjectiles.add(projectile);
-                enemy.minusHp();
+                enemy.minusHp(character.getAtk());
                 return true;
             }
         }

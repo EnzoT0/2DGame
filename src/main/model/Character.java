@@ -8,6 +8,7 @@ public class Character {
     private Position characterPos;
     //private Direction direction;
     private int hp;
+    private int atk;
 
 
     // EFFECTS: Constructs a character with a set position, direction and hp
@@ -15,6 +16,7 @@ public class Character {
         this.characterPos = new Position(30, 80);
 /*        this.direction = Direction.RIGHT;*/
         this.hp = 100;
+        atk = 5;
     }
 
 
@@ -57,18 +59,6 @@ public class Character {
     }
 
 
-/*    // EFFECTS: Returns a boolean, either a true or false, depending on whether the position is over the borders.
-    public boolean hasCollidedR(Position pos) {
-        return pos.getPosX() < 0 || pos.getPosY() < 0 || pos.getPosX() > 39
-                || pos.getPosY() > 21;
-    }*/
-
-/*    // EFFECTS: Returns a boolean, either a true or false, depending on whether the character collided with something.
-    public boolean hasCollided(Position pos) {
-        return characterPos.equals(pos);
-    }*/
-
-
     // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0.
     // MODIFIES: this
     // EFFECTS: Checks whether character is colliding with something, namely the enemy.
@@ -79,11 +69,13 @@ public class Character {
         }
     }
 
-/*    // MODIFIES: this
-    // EFFECTS: set the direction to given input.
-    public void setDirection(Direction dir) {
-        direction = dir;
-    }*/
+    public int getAtk() {
+        return atk;
+    }
+
+    public void setAtk(Integer integer) {
+        atk = integer;
+    }
 
     // EFFECTS: return character position.
     public Position getCharacterPos() {
