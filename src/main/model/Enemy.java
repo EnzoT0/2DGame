@@ -2,6 +2,8 @@ package model;
 
 // Enemy class represents the enemies inside the game that move and such.
 
+import java.awt.*;
+
 public class Enemy {
 
     private Position enemyPos;
@@ -47,5 +49,9 @@ public class Enemy {
         } else {
             return false;
         }
+    }
+
+    public Rectangle getHitBox(Integer width, Integer height) {
+        return new Rectangle(enemyPos.getPosX(), enemyPos.getPosY(), width, height);
     }
 }

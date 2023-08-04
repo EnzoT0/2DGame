@@ -1,8 +1,10 @@
 package model;
 
+import org.w3c.dom.css.Rect;
 import ui.GameKeyHandler;
 import ui.Inventory;
 
+import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -257,7 +259,14 @@ public class Game {
 
     public boolean checkBossHit(Enemy enemy, List<Projectile> badProjectiles) {
         for (Projectile projectile : projectiles) {
-            if (enemy.hasCollided(projectile.getPos(), 150)) {
+/*            if (enemy.hasCollided(projectile.getPos(), 150)) {
+                badProjectiles.add(projectile);
+                enemy.minusHp(character.getAtk());
+                return true;
+            }*/
+            Rectangle projRect = new Rectangle(projectile.getPos().getPosX(), projectile.getPos().getPosY(),
+                    18, 18);
+            if (enemy.getHitBox(150, 150).intersects(projRect)) {
                 badProjectiles.add(projectile);
                 enemy.minusHp(character.getAtk());
                 return true;
@@ -400,7 +409,15 @@ public class Game {
     // ADDED, need TESTS
     public boolean checkHit(Enemy enemy, List<Projectile> badProjectiles) {
         for (Projectile projectile : projectiles) {
-            if (enemy.hasCollided(projectile.getPos(), 18)) {
+            Rectangle projRect = new Rectangle(projectile.getPos().getPosX(), projectile.getPos().getPosY(),
+                    18, 18);
+/*            if (enemy.hasCollided(projectile.getPos(), 18)) {
+                badProjectiles.add(projectile);
+                enemy.minusHp(character.getAtk());
+                return true;
+            }*/
+
+            if (enemy.getHitBox(36, 36).intersects(projRect)) {
                 badProjectiles.add(projectile);
                 enemy.minusHp(character.getAtk());
                 return true;
