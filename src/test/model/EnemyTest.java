@@ -68,5 +68,16 @@ public class EnemyTest {
         assertTrue(enemy.hasCollided(new Position(5, 7), 2));
         assertFalse(enemy.hasCollided(new Position(4, 3), 2));
 
+        assertTrue(enemy.hasCollided(new Position(5, 11), 5));
+        assertTrue(enemy.hasCollided(new Position(5, 11), 5));
+
+        assertTrue(enemy.hasCollided(new Position(5, 6), 5));
+
+        assertTrue(enemy.hasCollided(new Position(5, 8), 6));
+        assertFalse(enemy.hasCollided(new Position(5, 5), 3));
+
+        assertFalse(enemy.hasCollided(new Position(3, 5), 8));
+
+
     }
 }
