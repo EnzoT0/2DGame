@@ -3,6 +3,8 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EnemyTest {
@@ -57,7 +59,7 @@ public class EnemyTest {
         assertEquals(0, enemy.getHp());
     }
 
-    @Test
+/*    @Test
     void testHasCollided() {
         assertTrue(enemy.hasCollided(new Position(5, 6), 2));
         assertTrue(enemy.hasCollided(new Position(7, 6), 2));
@@ -77,7 +79,14 @@ public class EnemyTest {
         assertFalse(enemy.hasCollided(new Position(5, 5), 3));
 
         assertFalse(enemy.hasCollided(new Position(3, 5), 8));
+    }*/
 
-
+    @Test
+    void testHitBox() {
+        assertEquals(new Rectangle(enemy.getEnemyPos().getPosX(),
+                enemy.getEnemyPos().getPosY(), 10, 10), enemy.getHitBox(10, 10));
+        assertEquals(new Rectangle(enemy.getEnemyPos().getPosX(), enemy.getEnemyPos().getPosY(), 15, 15),
+                enemy.getHitBox(15, 15));
     }
+
 }

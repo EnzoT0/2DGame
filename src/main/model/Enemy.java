@@ -42,14 +42,14 @@ public class Enemy {
     }
 
 
-    public boolean hasCollided(Position pos, Integer integer) {
+/*    public boolean hasCollided(Position pos, Integer integer) {
         if (pos.getPosX() >= enemyPos.getPosX() && pos.getPosX() <= enemyPos.getPosX() + integer
                 && pos.getPosY() >= enemyPos.getPosY() && pos.getPosY() <= enemyPos.getPosY() + integer) {
             return true;
         } else {
             return false;
         }
-    }
+    }*/
 
     public Rectangle getHitBox(Integer width, Integer height) {
         return new Rectangle(enemyPos.getPosX(), enemyPos.getPosY(), width, height);
