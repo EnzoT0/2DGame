@@ -47,7 +47,7 @@ public class MenuPanel extends JPanel {
         InventoryPanel inventoryPanel = new InventoryPanel(terminalGame, terminalGame.getGame().getInventory());
         inventoryPanel.setVisible(true);
         terminalGame.setPaused(true);
-        terminalGame.getGame().getInventory().displayInventory();
+//        terminalGame.getGame().getInventory().displayInventory();
         terminalGame.requestFocusInWindow();
     }
 
