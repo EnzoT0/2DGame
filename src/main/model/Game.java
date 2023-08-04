@@ -216,7 +216,7 @@ public class Game {
         Random rand = new Random();
         if (currentTime - enemyLastFired >= 500) {
             Projectile projectile = new Projectile(new Position(boss.get(0).getEnemyPos().getPosX(),
-                    boss.get(0).getEnemyPos().getPosY() + rand.nextInt(75)));
+                    boss.get(0).getEnemyPos().getPosY() + rand.nextInt(125)));
             bossProjectiles.add(projectile);
             enemyLastFired = currentTime;
         }

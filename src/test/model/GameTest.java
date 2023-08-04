@@ -306,9 +306,6 @@ public class GameTest {
         game.getCharacter().setCharacterPos(new Position(609, 369));
         game.checkEnemy();
         assertEquals(new Position(609, 369), game.getCharacter().getCharacterPos());
-
-
-
     }
 
     @Test
@@ -324,6 +321,143 @@ public class GameTest {
         game.checkBoss();
         assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
         assertTrue(game.getNextLevelBoss());
+    }
+
+    @Test
+    void testCheckBoss2() {
+        game.setNextLevelBoss(true);
+        game.getCharacter().setCharacterPos(new Position(620, 369));
+        game.checkBoss();
+        assertEquals(new Position(620, 369), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.checkBoss();
+        assertEquals(new Position(620, 369), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(620, 260));
+        game.checkBoss();
+        assertEquals(new Position(620, 260), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(400, 240));
+        game.checkBoss();
+        assertEquals(new Position(400, 240), game.getCharacter().getCharacterPos());
+
+
+        game.getCharacter().setCharacterPos(new Position(609, 300));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.getEnemies().clear();
+
+        game.getCharacter().setCharacterPos(new Position(609, 370));
+        game.checkBoss();
+        assertEquals(new Position(609, 370), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 270));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.getEnemies().clear();
+
+        game.getCharacter().setCharacterPos(new Position(609, 450));
+        game.checkBoss();
+        assertEquals(new Position(609, 450), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 280));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.getEnemies().clear();
+
+        game.getCharacter().setCharacterPos(new Position(609, 371));
+        game.checkBoss();
+        assertEquals(new Position(609, 371), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 369));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.getEnemies().clear();
+
+        game.getCharacter().setCharacterPos(new Position(609, 271));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.getEnemies().clear();
+
+        game.getCharacter().setCharacterPos(new Position(609, 269));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.getEnemies().clear();
+
+        game.getCharacter().setCharacterPos(new Position(609, 249));
+        game.checkBoss();
+        assertEquals(new Position(609, 249), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 251));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+        game.getEnemies().clear();
+
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(new Enemy(new Position(100, 100)));
+        game.setEnemies(enemies);
+
+        game.getCharacter().setCharacterPos(new Position(609, 369));
+        game.checkBoss();
+        assertEquals(new Position(609, 369), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(false);
+        game.checkBoss();
+        assertEquals(new Position(609, 369), game.getCharacter().getCharacterPos());
+    }
+
+    @Test
+    void testCheckBoss3() {
+        game.getCharacter().setCharacterPos(new Position(609, 369));
+        game.setNextLevelBoss(false);
+        game.checkBoss();
+        assertEquals(new Position(609, 369), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(true);
+
+        game.getCharacter().setCharacterPos(new Position(609, 369));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(566, 369));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(611, 369));
+        game.checkBoss();
+        assertEquals(new Position(611, 369), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(565, 369));
+        game.checkBoss();
+        assertEquals(new Position(565, 369), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(564, 369));
+        game.checkBoss();
+        assertEquals(new Position(564, 369), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(610, 369));
+        game.checkBoss();
+        assertEquals(new Position(610, 369), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 340));
+        game.checkBoss();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
     }
 
     @Test
