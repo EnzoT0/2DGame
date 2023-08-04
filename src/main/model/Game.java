@@ -4,6 +4,7 @@ import ui.GameKeyHandler;
 import ui.Inventory;
 
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 // Game represents the state of the game, including the update method which is used to update the game.
@@ -57,7 +58,20 @@ public class Game {
     private long lastFired = 0;
     private long interval = 1000;
 
-    // EFFECTS: Constructs a game with a max X and max Y.
+    private Boolean nextLevelBoss = true;
+
+    private List<Enemy> boss = new ArrayList<>();
+
+    private long enemyLastFired = 0;
+    private List<Projectile> bossProjectiles = new ArrayList<>();
+
+    private boolean hitByProjectile = false;
+    private long lastHit;
+    private long hitDuration = 1500;
+    private boolean onCooldown = false;
+
+
+    // EFFECTS: Constructs a game
     // Generates a coin at a random location in the board.
     public Game(GameKeyHandler keyHandler) {
         this.keyHandler = keyHandler;
@@ -92,14 +106,179 @@ public class Game {
             spawnTreasure();
         }
 
-        checkEnemyFire(); // ADDED, need TESTS
+        checkEnemyFire();
 
-        // bossEnemyUpdate
+        checkEnemy(); // ADDED
+
+        checkNextLevel();
+
 
         if (getCharacter().getHp() <= 0) {
             ended = true;
         }
+
     }
+
+    public void checkNextLevel() {
+        if (nextLevelBoss) {
+
+            checkBoss(); // ADDED
+
+            ifBoss();
+            checkCooldownHit();
+
+            if (!boss.isEmpty()) {
+                if (boss.get(0).getHp() <= 0) {
+                    boss.clear();
+                    bossProjectiles.clear();
+                    nextLevelBoss = false;
+                }
+            }
+        }
+    }
+
+    public void checkCooldownHit() {
+        long currentTime = System.currentTimeMillis();
+        if (hitByProjectile && !onCooldown) {
+            character.changeHp();
+            onCooldown = true;
+            lastHit = currentTime;
+        }
+        if (currentTime - lastHit >= hitDuration) {
+            hitByProjectile = false;
+            onCooldown = false;
+        }
+    }
+
+    public void ifBoss() {
+        if (!boss.isEmpty()) {
+            bossFire();
+            moveBossProjectile();
+            bossUpdate();
+            checkBossProjectiles();
+        }
+    }
+
+
+    public void checkEnemy() {
+        if (character.getCharacterPos().getPosX() < 610 && (character.getCharacterPos().getPosX() + 20) > 585
+                && character.getCharacterPos().getPosY() < 370 && (character.getCharacterPos().getPosY() + 20) > 270
+                && enemies.size() == 0 && !nextLevelBoss) {
+            character.setCharacterPos(new Position(30, 200));
+            EnemyList enemyList = new EnemyList();
+            enemyList.addEnemies(5);
+            List<Enemy> newEnemies = enemyList.getEnemies();
+            setEnemies(newEnemies);
+            boss.clear();
+            bossProjectiles.clear();
+            nextLevelBoss = true;
+        }
+    }
+
+    public void checkBoss() {
+        if (character.getCharacterPos().getPosX() < 610 && (character.getCharacterPos().getPosX() + 20) > 585
+                && character.getCharacterPos().getPosY() < 370 && (character.getCharacterPos().getPosY() + 20) > 270
+                && enemies.size() == 0 && nextLevelBoss) {
+            character.setCharacterPos(new Position(30, 200));
+            seeWhichEnemy();
+        }
+    }
+
+    public void bossUpdate() {
+        long currentTime = System.currentTimeMillis();
+        long elapsedTimeSinceLastUpdate = currentTime - lastEnemyUpdateTime;
+
+        if (elapsedTimeSinceLastUpdate >= ENEMY_UPDATE_CD) {
+            for (Enemy enemy : boss) {
+                int newPosX = enemy.getEnemyPos().getPosX() + (rand.nextInt(11) - 5);
+                int newPosY = enemy.getEnemyPos().getPosY() + (rand.nextInt(11) - 5);
+                if (newPosX > maxX) {
+                    newPosX = maxX - 15;
+                } else if (newPosY > 535) {
+                    newPosY = 535 - 15;
+                } else if (newPosX < 0) {
+                    newPosX += 15;
+                } else if (newPosY < minY) {
+                    newPosY += 15;
+                }
+                Position pos = new Position(newPosX, newPosY);
+                enemy.setEnemyPos(pos);
+                getCharacter().checkCollision(pos);
+                lastEnemyUpdateTime = currentTime;
+            }
+
+        }
+    }
+
+    public void bossFire() {
+        long currentTime = System.currentTimeMillis();
+        Random rand = new Random();
+        if (currentTime - enemyLastFired >= 500) {
+            Projectile projectile = new Projectile(new Position(boss.get(0).getEnemyPos().getPosX(),
+                    boss.get(0).getEnemyPos().getPosY() + rand.nextInt(75)));
+            bossProjectiles.add(projectile);
+            enemyLastFired = currentTime;
+        }
+    }
+
+    public void seeWhichEnemy() {
+        if (boss.size() == 0) {
+            Position bossPos = new Position(375, 200);
+            Enemy bossEnemy = new Enemy(bossPos);
+            bossEnemy.setHp(200);
+            boss.add(bossEnemy);
+        }
+    }
+
+    public void moveBossProjectile() {
+        for (Projectile projectile : bossProjectiles) {
+            projectile.moveBossPos();
+        }
+    }
+
+    public void checkBossProjectiles() {
+        List<Projectile> badProjectiles = new ArrayList<>();
+        List<Enemy> badEnemies = new ArrayList<>();
+
+        checkCharHit(character, badProjectiles);
+
+        for (Enemy enemyBoss : boss) {
+            if (checkBossHit(enemyBoss, badProjectiles)) {
+                if (enemyBoss.getHp() <= 0) {
+                    badEnemies.add(enemyBoss);
+                }
+            }
+        }
+        boss.remove(badEnemies);
+        bossProjectiles.removeAll(badProjectiles);
+        projectiles.removeAll(badProjectiles);
+    }
+
+    public boolean checkBossHit(Enemy enemy, List<Projectile> badProjectiles) {
+        for (Projectile projectile : projectiles) {
+            if (enemy.hasCollided(projectile.getPos(), 150)) {
+                badProjectiles.add(projectile);
+                enemy.minusHp(character.getAtk());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkCharHit(Character character, List<Projectile> badProjectiles) {
+        for (Projectile projectile : bossProjectiles) {
+            if (character.hasCollided(projectile.getPos())) {
+                badProjectiles.add(projectile);
+                hitByProjectile = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
 
     // ADDED, need TESTS
     public void checkFire() {
@@ -118,7 +297,7 @@ public class Game {
         long elapsedTimeSinceLastUpdate = currentTime - lastEnemyUpdateTime;
 
         if (elapsedTimeSinceLastUpdate >= ENEMY_UPDATE_CD) {
-            for (model.Enemy enemy : enemies) {
+            for (Enemy enemy : enemies) {
                 int newPosX = enemy.getEnemyPos().getPosX() + (rand.nextInt(11) - 5);
                 int newPosY = enemy.getEnemyPos().getPosY() + (rand.nextInt(11) - 5);
                 if (newPosX > maxX) {
@@ -191,7 +370,14 @@ public class Game {
             }
         }
 
+        for (Projectile bossProjectile : bossProjectiles) {
+            if (outOfBoundary(bossProjectile.getPos())) {
+                removeProjectileList.add(bossProjectile);
+            }
+        }
+
         projectiles.removeAll(removeProjectileList);
+        bossProjectiles.removeAll(removeProjectileList);
     }
 
     // ADDED, need TESTS
@@ -206,16 +392,14 @@ public class Game {
                 }
             }
         }
-
         projectiles.removeAll(badProjectiles);
         enemies.removeAll(badEnemies);
-
     }
 
     // ADDED, need TESTS
     public boolean checkHit(Enemy enemy, List<Projectile> badProjectiles) {
         for (Projectile projectile : projectiles) {
-            if (enemy.hasCollided(projectile.getPos())) {
+            if (enemy.hasCollided(projectile.getPos(), 18)) {
                 badProjectiles.add(projectile);
                 enemy.minusHp(character.getAtk());
                 return true;
@@ -319,31 +503,6 @@ public class Game {
     public Set<Position> getTreasures() {
         return treasures;
     }
-
-/*    // EFFECTS: returns dx.
-    public int getDx() {
-        return dx;
-    }
-
-    // EFFECTS: returns dy.
-    public int getDy() {
-        return dy;
-    }*/
-
-/*    // EFFECTS: returns whether isRand is true or false.
-    public boolean isRand() {
-        return isRand;
-    }
-
-    // EFFECTS: Returns the random Dx.
-    public int getRandDx() {
-        return randDx;
-    }
-
-    // EFFECTS: Returns the random Dy.
-    public int getRandDy() {
-        return randDy;
-    }*/
 
     // MODIFIES: this
     // EFFECTS: sets the set of treasures to the given input.
@@ -451,5 +610,41 @@ public class Game {
 
     public long getInterval() {
         return interval;
+    }
+
+    public List<Enemy> getBoss() {
+        return boss;
+    }
+
+    public List<Projectile> getBossProjectiles() {
+        return bossProjectiles;
+    }
+
+    public void setNextLevelBoss(Boolean bool) {
+        nextLevelBoss = bool;
+    }
+
+    public void setBoss(List<Enemy> bossEnemy) {
+        boss = bossEnemy;
+    }
+
+    public boolean getNextLevelBoss() {
+        return nextLevelBoss;
+    }
+
+    public boolean gethitByProjectile() {
+        return hitByProjectile;
+    }
+
+    public void setHitByProjectile(Boolean b) {
+        hitByProjectile = b;
+    }
+
+    public boolean getOnCooldown() {
+        return onCooldown;
+    }
+
+    public void setBossProjectiles(List<Projectile> projectiles) {
+        bossProjectiles = projectiles;
     }
 }

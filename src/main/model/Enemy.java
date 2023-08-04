@@ -35,14 +35,17 @@ public class Enemy {
         hp = hp - integer;
     }
 
-    public boolean hasCollided(Position pos) {
-        double approx = 15;
-        double distance = Math.sqrt(Math.pow(enemyPos.getPosX() - pos.getPosX(), 2)
-                + Math.pow(enemyPos.getPosY() - pos.getPosY(), 2));
-        return distance < approx;
-    }
-
     public void setHp(Integer integer) {
         hp = integer;
+    }
+
+
+    public boolean hasCollided(Position pos, Integer integer) {
+        if (pos.getPosX() >= enemyPos.getPosX() && pos.getPosX() <= enemyPos.getPosX() + integer
+                && pos.getPosY() >= enemyPos.getPosY() && pos.getPosY() <= enemyPos.getPosY() + integer) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

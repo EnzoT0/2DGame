@@ -17,6 +17,10 @@ public class Projectile {
         setPos(new Position(pos.getPosX() + 5, pos.getPosY()));
     }
 
+    public void moveBossPos() {
+        setPos(new Position(pos.getPosX() - 2, pos.getPosY()));
+    }
+
     public void setPos(Position pos) {
         this.pos = pos;
     }

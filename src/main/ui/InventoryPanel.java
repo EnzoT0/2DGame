@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Random;
 
 // Some parts of the code is inspired from the PlayDrawingTool class in the DrawingPlayer project (setImageItemPanel):
 // https://github.students.cs.ubc.ca/CPSC210/SimpleDrawingPlayer-Complete/blob/main/src/ui/tools/PlayDrawingTool.java
@@ -22,6 +23,7 @@ public class InventoryPanel extends JFrame {
     private JLabel imgLabel;
     private JButton useTreasure;
     private JPanel itemPanel;
+    private JLabel notification;
 
     // Pain
     public InventoryPanel(TerminalGame terminalGame, Inventory inventory) {
@@ -77,7 +79,7 @@ public class InventoryPanel extends JFrame {
                 useTreasure = new JButton("Use " + treasure.getName());
 
                 useTreasure.addActionListener(new ItemActionListener(treasure,
-                        imgLabel, useTreasure, itemPanel, listOfItemsPanel, terminalGame));
+                        imgLabel, useTreasure, itemPanel, listOfItemsPanel, terminalGame, this));
 
                 itemPanel.add(useTreasure, BorderLayout.SOUTH);
 
@@ -96,4 +98,5 @@ public class InventoryPanel extends JFrame {
         coinPanel.add(coinImageLabel, BorderLayout.CENTER);
         listOfItemsPanel.add(coinPanel);
     }
+
 }

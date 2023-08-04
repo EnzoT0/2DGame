@@ -1,6 +1,8 @@
 package ui;
 
+import model.Enemy;
 import model.Game;
+import model.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,9 +32,18 @@ public class MenuPanel extends JPanel {
         loadGame.addActionListener(e -> load());
         add(loadGame);
 
-    }
+        JButton addEnemy = new JButton("Add an enemy");
+        addEnemy.addActionListener(e -> enemyAdd());
+        add(addEnemy);
 
+    }
+    
     public void displayInventory() {
+        if (terminalGame.getGame().isEnded()) {
+            terminalGame.requestFocusInWindow();
+            return;
+        }
+
         InventoryPanel inventoryPanel = new InventoryPanel(terminalGame, terminalGame.getGame().getInventory());
         inventoryPanel.setVisible(true);
         terminalGame.setPaused(true);
@@ -41,11 +52,21 @@ public class MenuPanel extends JPanel {
     }
 
     public void changeState() {
+        if (terminalGame.getGame().isEnded()) {
+            terminalGame.requestFocusInWindow();
+            return;
+        }
+
         terminalGame.checkState();
         terminalGame.requestFocusInWindow();
     }
 
     public void save() {
+        if (terminalGame.getGame().isEnded()) {
+            terminalGame.requestFocusInWindow();
+            return;
+        }
+
         terminalGame.saveGame();
         terminalGame.requestFocusInWindow();
     }
@@ -55,9 +76,10 @@ public class MenuPanel extends JPanel {
         terminalGame.requestFocusInWindow();
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
+    public void enemyAdd() {
+        Position pos = terminalGame.getGame().generateRandomPosition();
+        terminalGame.getGame().getEnemies().add(new Enemy(pos));
+        terminalGame.requestFocusInWindow();
     }
+
 }

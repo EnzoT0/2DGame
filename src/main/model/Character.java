@@ -29,21 +29,23 @@ public class Character {
 
     public void handleUserInput(GameKeyHandler keyHandler) {
         if (keyHandler.isUpPressed() == true) {
-            if (characterPos.getPosY() <= 55) {
-                return;
+            if (characterPos.getPosY() > 55) {
+                setCharacterPos(new Position(characterPos.getPosX(), characterPos.getPosY() - 4));
             }
-            setCharacterPos(new Position(characterPos.getPosX(), characterPos.getPosY() - 4));
-        } else if (keyHandler.isDownPressed() == true) {
+        }
+        if (keyHandler.isDownPressed() == true) {
             if (characterPos.getPosY() > 535) {
                 return;
             }
             setCharacterPos(new Position(characterPos.getPosX(), characterPos.getPosY() + 4));
-        } else if (keyHandler.isRightPressed() == true) {
+        }
+        if (keyHandler.isRightPressed() == true) {
             if (characterPos.getPosX() > 570) {
                 return;
             }
             setCharacterPos(new Position(characterPos.getPosX() + 4, characterPos.getPosY()));
-        } else if (keyHandler.isLeftPressed() == true) {
+        }
+        if (keyHandler.isLeftPressed() == true) {
             if (characterPos.getPosX() <= 0) {
                 return;
             }
@@ -52,7 +54,7 @@ public class Character {
     }
 
     public boolean hasCollided(Position pos) {
-        double approx = 15;
+        double approx = 20;
         double distance = Math.sqrt(Math.pow(characterPos.getPosX() - pos.getPosX(), 2)
                 + Math.pow(characterPos.getPosY() - pos.getPosY(), 2));
         return distance < approx;

@@ -2,6 +2,7 @@ package ui;
 
 import model.*;
 import model.EnemyList;
+import org.w3c.dom.css.Rect;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -39,19 +40,23 @@ public class TerminalGame extends JPanel {
     private int currentHP;
     private int maxHP;
 
+    private int currentEnemyHP;
+    private int maxEnemyHP;
+
     private boolean isPaused = false;
 
+
     public TerminalGame() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        setPreferredSize(new Dimension(screenWidth, screenHeight));
 
-        this.setBackground(Color.black);
+        setBackground(Color.black);
 
-        this.setDoubleBuffered(true);
-        this.addKeyListener(keyHandler);
+        setDoubleBuffered(true);
+        addKeyListener(keyHandler);
 
         addMultiPurposeCheck();
         
-        this.setFocusable(true);
+        setFocusable(true);
     }
 
     public void startGame() {
@@ -64,6 +69,9 @@ public class TerminalGame extends JPanel {
         // add to menu panel how much enemies you would like.
         currentHP = 100;
         maxHP = 100;
+
+        currentEnemyHP = 200;
+        maxEnemyHP = 200;
 
         updateTimer();
     }
@@ -88,6 +96,9 @@ public class TerminalGame extends JPanel {
         game.enemyUpdate();
 
         currentHP = game.getCharacter().getHp();
+        if (game.getBoss().size() != 0) {
+            currentEnemyHP = game.getBoss().get(0).getHp();
+        }
     }
 
 
@@ -96,23 +107,48 @@ public class TerminalGame extends JPanel {
 
         Graphics2D g = (Graphics2D) graphics;
 
-        drawHpBar(g);
+        drawTopBar(g);
         drawCharacter(g);
         drawEnemy(g);
         drawCoin(g);
         drawTreasures(g);
+        drawTile(g);
+        drawBoss(g);
         drawProjectile(g);
 
-/*        if (menuOpen) {
-            menuPanel.paintComponent(g);
-        }*/
+        drawBossProjectiles(g);
+
+        if (game.getBoss().size() != 0) {
+            drawBossEnemyBar(g);
+        }
 
         if (game.isEnded()) {
             drawEndScreen(g);
         }
 
+
         g.dispose();
 
+    }
+
+    public void drawTile(Graphics2D g) {
+
+        g.fillRect(585, 270, 25, 100);
+    }
+
+    public void drawBoss(Graphics2D g) {
+        for (Enemy boss : game.getBoss()) {
+            g.setColor(Color.RED);
+            g.fillRect(boss.getEnemyPos().getPosX(), boss.getEnemyPos().getPosY(), 150, 150);
+        }
+    }
+
+    public void drawBossProjectiles(Graphics2D g) {
+        for (Projectile bossProjectile : game.getBossProjectiles()) {
+            g.setColor(Color.WHITE);
+            g.fillOval(bossProjectile.getPos().getPosX() + 5, bossProjectile.getPos().getPosY(),
+                    tileSize / 2, tileSize / 2);
+        }
     }
 
     public void addMultiPurposeCheck() {
@@ -159,6 +195,13 @@ public class TerminalGame extends JPanel {
         game.getTreasures().clear();
         game.getTreasures().add(treasurePos);
 
+        game.getBoss().clear();
+        game.getBossProjectiles().clear();
+
+        g.setColor(Color.BLACK);
+        g.fillRect(585, 270, 25, 100);
+
+
         // can set character position to who knows where as well LOL.
 
         g.setColor(Color.white);
@@ -187,11 +230,32 @@ public class TerminalGame extends JPanel {
     }
 
     public void drawEnemy(Graphics2D g) {
-        for (model.Enemy enemy : game.getEnemies()) {
+        for (Enemy enemy : game.getEnemies()) {
             g.setColor(Color.red);
             g.fillRect(enemy.getEnemyPos().getPosX(),
                     enemy.getEnemyPos().getPosY(), tileSize, tileSize);
         }
+    }
+
+    public void drawBossEnemyBar(Graphics2D g) {
+        int barWidthEnemy = 250;
+        int barHeightEnemy = 30;
+        int barXEnemy = 350;
+        int barYEnemy = 10;
+
+        // background of hp
+        g.setColor(Color.GRAY);
+        g.fillRect(barXEnemy, barYEnemy, barWidthEnemy, barHeightEnemy);
+
+        // Percentage of hp
+        double percentageEnemy = (double) currentEnemyHP / maxEnemyHP;
+
+        // width of part of the bar based on the percentage
+        int coloredWidthEnemy = (int) (barWidthEnemy * percentageEnemy);
+
+        // green part of HP
+        g.setColor(Color.RED);
+        g.fillRect(barXEnemy, barYEnemy, coloredWidthEnemy, barHeightEnemy);
     }
 
     public void drawCoin(Graphics2D g) {
@@ -208,9 +272,18 @@ public class TerminalGame extends JPanel {
         }
     }
 
-    public void drawHpBar(Graphics2D g) {
+    public void drawTopBar(Graphics2D g) {
+        g.setColor(Color.lightGray);
+        g.fillRect(0, 0, 720, 50);
+/*        g.setColor(Color.BLUE);
+        g.setFont(new Font("Monospaced", Font.BOLD, 20));
+        g.drawString("HP: " + currentHP, 275, 30);
+
+        g.setColor(Color.RED);
+        g.drawString("ATK: " + game.getCharacter().getAtk(), 375, 30);*/
+
         // Draw the HP bar here, similar to the previous HPBarExample's paint method
-        int barWidth = 300;
+        int barWidth = 250;
         int barHeight = 30;
         int barX = 15;
         int barY = 10;
@@ -258,6 +331,10 @@ public class TerminalGame extends JPanel {
 
     public void setPaused(Boolean b) {
         isPaused = b;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 
 

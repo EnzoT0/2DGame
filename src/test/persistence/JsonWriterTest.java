@@ -8,6 +8,7 @@ import ui.Inventory;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -241,6 +242,73 @@ public class JsonWriterTest {
             assertEquals(20, game.getEnemies().get(0).getHp());
             assertEquals(20, game.getEnemies().get(1).getHp());
             assertEquals(5, game.getCharacter().getAtk());
+        } catch (FileNotFoundException e) {
+            fail("did not expect this exception.");
+        } catch (IOException e) {
+            fail("did not expect this exception.");
+        }
+    }
+
+    @Test
+    void testEnemies2() {
+        try {
+            Game game = new Game(keyHandler);
+            EnemyList enemyList = new EnemyList();
+            List<Enemy> enemies = enemyList.addEnemies(1);
+            game.setBoss(enemies);
+
+            Position pos = new Position(1, 3);
+            game.setSpawnTreasurePos(pos);
+            game.getTreasures().add(pos);
+
+            JsonWriter jsonWriter = new JsonWriter("./data/testEnemies2.json");
+            jsonWriter.open();
+            jsonWriter.write(game);
+            jsonWriter.close();
+
+            JsonReader jsonReader = new JsonReader("./data/testEnemies2.json");
+            game = jsonReader.loadGame(keyHandler);
+            assertEquals(pos, game.getSpawnTreasurePos());
+            assertEquals(5, game.getCharacter().getAtk());
+            assertEquals(1, game.getBoss().size());
+            assertEquals(20, game.getBoss().get(0).getHp());
+        } catch (FileNotFoundException e) {
+            fail("did not expect this exception.");
+        } catch (IOException e) {
+            fail("did not expect this exception.");
+        }
+    }
+
+    @Test
+    void testEnemies3() {
+        try {
+            Game game = new Game(keyHandler);
+            EnemyList enemyList = new EnemyList();
+            List<Enemy> enemies = enemyList.addEnemies(1);
+            game.setBoss(enemies);
+
+            Position pos = new Position(1, 3);
+            game.setSpawnTreasurePos(pos);
+            game.getTreasures().add(pos);
+
+            Projectile projectile = new Projectile(new Position(100, 100));
+            List<Projectile> projectiles = new ArrayList<>();
+            projectiles.add(projectile);
+            game.setBossProjectiles(projectiles);
+
+            JsonWriter jsonWriter = new JsonWriter("./data/testEnemies3.json");
+            jsonWriter.open();
+            jsonWriter.write(game);
+            jsonWriter.close();
+
+            JsonReader jsonReader = new JsonReader("./data/testEnemies3.json");
+            game = jsonReader.loadGame(keyHandler);
+            assertEquals(pos, game.getSpawnTreasurePos());
+            assertEquals(5, game.getCharacter().getAtk());
+            assertEquals(1, game.getBoss().size());
+            assertEquals(20, game.getBoss().get(0).getHp());
+
+            assertEquals(1, game.getBossProjectiles().size());
         } catch (FileNotFoundException e) {
             fail("did not expect this exception.");
         } catch (IOException e) {

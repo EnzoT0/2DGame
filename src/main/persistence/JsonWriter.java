@@ -31,6 +31,8 @@ public class JsonWriter {
     public void write(Game game) {
         JSONArray jsonEnemies = new JSONArray();
         JSONArray jsonInventory = new JSONArray();
+        JSONArray jsonBoss = new JSONArray();
+        JSONArray jsonProjectile = new JSONArray();
         for (Enemy enemy : game.getEnemies()) {
             JSONObject jsonEnemy = getJsonEnemy(enemy);
             jsonEnemies.put(jsonEnemy);
@@ -40,14 +42,34 @@ public class JsonWriter {
             jsonInventory.put(getJsonTreasure(treasure));
         }
 
+        writeBoss(game, jsonBoss);
+
+        writeProjectile(game, jsonProjectile);
+
 
         JSONObject json = new JSONObject();
         json.put("playerPos", getJsonPos(game.getCharacter().getCharacterPos()));
         json.put("enemies", jsonEnemies);
         json.put("inventory", jsonInventory);
+        json.put("boss", jsonBoss);
+        json.put("projectile", jsonProjectile);
         checkers(game, json);
         hpCoinCheck(game, json);
         writer.print(json.toString());
+    }
+
+    public void writeProjectile(Game game, JSONArray jsonProjectile) {
+        for (Projectile projectile : game.getBossProjectiles()) {
+            JSONObject jsonP = getProjectile(projectile);
+            jsonProjectile.put(jsonP);
+        }
+    }
+
+    public void writeBoss(Game game, JSONArray jsonBoss) {
+        for (Enemy boss : game.getBoss()) {
+            JSONObject jsonB = getJsonEnemy(boss);
+            jsonBoss.put(jsonB);
+        }
     }
 
     // MODIFIES: this
@@ -82,6 +104,13 @@ public class JsonWriter {
         JSONObject json = new JSONObject();
         json.put("x", pos.getPosX());
         json.put("y", pos.getPosY());
+        return json;
+    }
+
+    public JSONObject getProjectile(Projectile projectile) {
+        JSONObject json = new JSONObject();
+        json.put("projectileX", projectile.getPos().getPosX());
+        json.put("projectileY", projectile.getPos().getPosY());
         return json;
     }
 

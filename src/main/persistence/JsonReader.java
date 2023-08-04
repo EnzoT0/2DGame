@@ -1,9 +1,6 @@
 package persistence;
 
-import model.Enemy;
-import model.Game;
-import model.Position;
-import model.Treasure;
+import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ui.GameKeyHandler;
@@ -13,6 +10,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 // Represents a reader that reads the game from the JSON data stores in the file.
@@ -48,6 +47,8 @@ public class JsonReader {
         }
 
         jsonInventory(game, jsonObject);
+        jsonBoss(game, jsonObject);
+        jsonProjectile(game, jsonObject);
         checkTreasures(game, jsonObject);
         checkCoins(game, jsonObject);
         checkAmount(game, jsonObject);
@@ -80,6 +81,30 @@ public class JsonReader {
             inventory.addSilentTreasure(treasure);
         }
         game.setInventory(inventory);
+    }
+
+    public void jsonBoss(Game game, JSONObject jsonObject) {
+        JSONArray jsonBoss = jsonObject.getJSONArray("boss");
+        for (int i = 0; i < jsonBoss.length(); i++) {
+            JSONObject jsonBoss1 = jsonBoss.getJSONObject(i);
+            Enemy enemy = getEnemy(jsonBoss1);
+            game.getBoss().add(enemy);
+        }
+    }
+
+    public void jsonProjectile(Game game, JSONObject jsonObject) {
+        JSONArray jsonProjectile = jsonObject.getJSONArray("projectile");
+        for (int i = 0; i < jsonProjectile.length(); i++) {
+            JSONObject jsonProj = jsonProjectile.getJSONObject(i);
+            Projectile projectile = getProjectile(jsonProj);
+            game.getBossProjectiles().add(projectile);
+        }
+    }
+
+    public Projectile getProjectile(JSONObject jsonObject) {
+        int x = jsonObject.getInt("projectileX");
+        int y = jsonObject.getInt("projectileY");
+        return new Projectile(new Position(x, y));
     }
 
     // MODIFIES: game

@@ -32,12 +32,12 @@ public class EnemyTest {
 
     }
 
-    @Test
+/*    @Test
     void testHasCollided() {
-        assertTrue(enemy.hasCollided(new Position(5, 6)));
-        assertFalse(enemy.hasCollided(new Position(100, 300)));
-        assertTrue(enemy.hasCollided(new Position(4, 5)));
-    }
+        assertTrue(enemy.hasCollidedFake(new Position(5, 6)));
+        assertFalse(enemy.hasCollidedFake(new Position(100, 300)));
+        assertTrue(enemy.hasCollidedFake(new Position(4, 5)));
+    }*/
 
     @Test
     void testMinusHp() {
@@ -55,5 +55,14 @@ public class EnemyTest {
         assertEquals(5, enemy.getHp());
         enemy.setHp(0);
         assertEquals(0, enemy.getHp());
+    }
+
+    @Test
+    void testHasCollided() {
+        assertTrue(enemy.hasCollided(new Position(5, 6), 2));
+        assertTrue(enemy.hasCollided(new Position(7, 6), 2));
+        assertTrue(enemy.hasCollided(new Position(5, 8), 2));
+        assertFalse(enemy.hasCollided(new Position(100, 100), 30));
+
     }
 }
