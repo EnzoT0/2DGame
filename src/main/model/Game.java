@@ -162,7 +162,8 @@ public class Game {
 
     public void checkEnemy() {
         if (character.getCharacterPos().getPosX() < 610 && (character.getCharacterPos().getPosX() + 20) > 585
-                && character.getCharacterPos().getPosY() < 370 && (character.getCharacterPos().getPosY() + 20) > 270
+                && character.getCharacterPos().getPosY() < 370
+                && (character.getCharacterPos().getPosY() + 20) > 270
                 && enemies.size() == 0 && !nextLevelBoss) {
             character.setCharacterPos(new Position(30, 200));
             EnemyList enemyList = new EnemyList();
