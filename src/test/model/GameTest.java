@@ -130,10 +130,23 @@ public class GameTest {
         assertFalse(game.getOnCooldown());
         game.checkCooldownHit();
 
-        // Set hitByProjectile true
+        // Set hitByProjectile true false
         game.setHitByProjectile(true);
         game.checkCooldownHit();
         assertEquals(95, game.getCharacter().getHp());
+        assertTrue(game.getOnCooldown());
+
+        // false true
+        game.setHitByProjectile(false);
+        game.setOnCooldown(true);
+        game.checkCooldownHit();
+        assertEquals(95, game.getCharacter().getHp());
+        assertTrue(game.getOnCooldown());
+
+        game.setHitByProjectile(true);
+        game.checkCooldownHit();
+        assertEquals(95, game.getCharacter().getHp());
+        assertTrue(game.gethitByProjectile());
         assertTrue(game.getOnCooldown());
     }
 
@@ -219,6 +232,27 @@ public class GameTest {
         game.checkEnemy();
         assertEquals(new Position(400, 240), game.getCharacter().getCharacterPos());
 
+
+        game.getCharacter().setCharacterPos(new Position(609, 300));
+        game.checkEnemy();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 370));
+        game.checkEnemy();
+        assertEquals(new Position(609, 370), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 270));
+        game.checkEnemy();
+        assertEquals(new Position(609, 270), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 450));
+        game.checkEnemy();
+        assertEquals(new Position(609, 450), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(609, 280));
+        game.checkEnemy();
+        assertEquals(new Position(609, 280), game.getCharacter().getCharacterPos());
+
         List<Enemy> enemies = new ArrayList<>();
         enemies.add(new Enemy(new Position(100, 100)));
         game.setEnemies(enemies);
@@ -226,6 +260,8 @@ public class GameTest {
         game.getCharacter().setCharacterPos(new Position(609, 369));
         game.checkEnemy();
         assertEquals(new Position(609, 369), game.getCharacter().getCharacterPos());
+
+
 
     }
 

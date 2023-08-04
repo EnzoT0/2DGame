@@ -651,4 +651,8 @@ public class Game {
     public void setEnemyLastFired(Long e) {
         enemyLastFired = e;
     }
+
+    public void setOnCooldown(Boolean b) {
+        onCooldown = b;
+    }
 }
