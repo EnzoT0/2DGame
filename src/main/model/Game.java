@@ -647,4 +647,8 @@ public class Game {
     public void setBossProjectiles(List<Projectile> projectiles) {
         bossProjectiles = projectiles;
     }
+
+    public void setEnemyLastFired(Long e) {
+        enemyLastFired = e;
+    }
 }

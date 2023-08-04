@@ -109,9 +109,13 @@ public class GameTest {
         List<Enemy> boss = new ArrayList<>();
         Position pos = new Position(10, 100);
         boss.add(new Enemy(pos));
-        boss.get(0).setHp(0);
         game.setBoss(boss);
 
+        game.checkNextLevel();
+        assertEquals(1, game.getBoss().size());
+        assertEquals(1, game.getBossProjectiles().size());
+
+        boss.get(0).setHp(0);
         game.checkNextLevel();
         assertEquals(0, game.getBoss().size());
         assertFalse(game.getBoss().contains(boss));
@@ -150,6 +154,79 @@ public class GameTest {
         assertEquals(0, game.getBoss().size());
         assertEquals(0, game.getBossProjectiles().size());
         assertTrue(game.getNextLevelBoss());
+    }
+
+    @Test
+    void testCheckEnemy2() {
+        game.getCharacter().setCharacterPos(new Position(590, 369));
+        game.checkEnemy();
+        assertEquals(new Position(590, 369), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(false);
+        game.checkEnemy();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+        assertEquals(5, game.getEnemies().size());
+        assertEquals(0, game.getBoss().size());
+        assertEquals(0, game.getBossProjectiles().size());
+        assertTrue(game.getNextLevelBoss());
+    }
+
+    @Test
+    void testCheckEnemy3() {
+        game.getCharacter().setCharacterPos(new Position(609, 350));
+        game.checkEnemy();
+        assertEquals(new Position(609, 350), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(false);
+        game.checkEnemy();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+        assertEquals(5, game.getEnemies().size());
+        assertEquals(0, game.getBoss().size());
+        assertEquals(0, game.getBossProjectiles().size());
+        assertTrue(game.getNextLevelBoss());
+    }
+
+    @Test
+    void testCheckEnemy4() {
+        game.getCharacter().setCharacterPos(new Position(609, 290));
+        game.checkEnemy();
+        assertEquals(new Position(609, 290), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(false);
+        game.checkEnemy();
+        assertEquals(new Position(30, 200), game.getCharacter().getCharacterPos());
+        assertEquals(5, game.getEnemies().size());
+        assertEquals(0, game.getBoss().size());
+        assertEquals(0, game.getBossProjectiles().size());
+        assertTrue(game.getNextLevelBoss());
+    }
+
+    @Test
+    void testCheckEnemy5() {
+        game.getCharacter().setCharacterPos(new Position(620, 369));
+        game.checkEnemy();
+        assertEquals(new Position(620, 369), game.getCharacter().getCharacterPos());
+
+        game.setNextLevelBoss(false);
+        game.checkEnemy();
+        assertEquals(new Position(620, 369), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(620, 260));
+        game.checkEnemy();
+        assertEquals(new Position(620, 260), game.getCharacter().getCharacterPos());
+
+        game.getCharacter().setCharacterPos(new Position(400, 240));
+        game.checkEnemy();
+        assertEquals(new Position(400, 240), game.getCharacter().getCharacterPos());
+
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(new Enemy(new Position(100, 100)));
+        game.setEnemies(enemies);
+
+        game.getCharacter().setCharacterPos(new Position(609, 369));
+        game.checkEnemy();
+        assertEquals(new Position(609, 369), game.getCharacter().getCharacterPos());
+
     }
 
     @Test
@@ -306,6 +383,20 @@ public class GameTest {
     }
 
     @Test
+    void testSeeWhichEnemy() {
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(new Enemy(new Position(100, 100)));
+        game.setBoss(enemies);
+        game.seeWhichEnemy();
+        assertEquals(1, game.getBoss().size());
+
+        game.getBoss().clear();
+        game.seeWhichEnemy();
+        assertEquals(new Position(375, 200), game.getBoss().get(0).getEnemyPos());
+        assertEquals(200, game.getBoss().get(0).getHp());
+    }
+
+    @Test
     void testCheckBossHit() {
         //  do nothing
         Enemy enemy1 = new Enemy(new Position(1000, 1000));
@@ -327,6 +418,19 @@ public class GameTest {
 
         assertEquals(1, badProjectiles.size());
         assertEquals(15, enemy.getHp());
+    }
+
+    @Test
+    void testBossFire() {
+        long currentTime = System.currentTimeMillis();
+        game.setEnemyLastFired(currentTime - 100);
+
+        List<Enemy> boss = new ArrayList<>();
+        boss.add(new Enemy(new Position(100, 100)));
+        game.setBoss(boss);
+
+        game.bossFire();
+        assertEquals(0, game.getBossProjectiles().size());
     }
 
     @Test
