@@ -58,6 +58,8 @@ public class JsonWriter {
         writer.print(json.toString());
     }
 
+    // MODIFIES: this
+    // EFFECTS: Writes the boss projectiles into a JSONArray.
     public void writeProjectile(Game game, JSONArray jsonProjectile) {
         for (Projectile projectile : game.getBossProjectiles()) {
             JSONObject jsonP = getProjectile(projectile);
@@ -65,6 +67,8 @@ public class JsonWriter {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Writes the boss into a JSONArray.
     public void writeBoss(Game game, JSONArray jsonBoss) {
         for (Enemy boss : game.getBoss()) {
             JSONObject jsonB = getJsonEnemy(boss);
@@ -107,6 +111,8 @@ public class JsonWriter {
         return json;
     }
 
+    // MODIFIES: this
+    // EFFECTS: puts position x and y of projectile into a JSONOBject.
     public JSONObject getProjectile(Projectile projectile) {
         JSONObject json = new JSONObject();
         json.put("projectileX", projectile.getPos().getPosX());

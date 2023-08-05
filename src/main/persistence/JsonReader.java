@@ -83,6 +83,9 @@ public class JsonReader {
         game.setInventory(inventory);
     }
 
+    // MODIFIES: game
+    // EFFECTS: Reads the json file and gets the information of boss from it.
+    // It then adds it to the new boss list.
     public void jsonBoss(Game game, JSONObject jsonObject) {
         JSONArray jsonBoss = jsonObject.getJSONArray("boss");
         for (int i = 0; i < jsonBoss.length(); i++) {
@@ -92,6 +95,9 @@ public class JsonReader {
         }
     }
 
+    // MODIFIES: game
+    // EFFECTS: Reads the json file and gets the information of projectiles from it.
+    // It then adds it to the new projectiles list.
     public void jsonProjectile(Game game, JSONObject jsonObject) {
         JSONArray jsonProjectile = jsonObject.getJSONArray("projectile");
         for (int i = 0; i < jsonProjectile.length(); i++) {
@@ -101,6 +107,8 @@ public class JsonReader {
         }
     }
 
+    // EFFECTS: Reads the json file and gets the information of projectile from it.
+    // It returns a new projectile with the given x and y pos.
     public Projectile getProjectile(JSONObject jsonObject) {
         int x = jsonObject.getInt("projectileX");
         int y = jsonObject.getInt("projectileY");

@@ -22,21 +22,26 @@ public class Enemy {
         return enemyPos;
     }
 
-    // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0 for the position.
+    // REQUIRES: 570 >= x >= 0 and 535 >= y >= 55.
     // MODIFIES: this
     // EFFECTS: sets the enemy position to the position given.
     public void setEnemyPos(Position enemyPos) {
         this.enemyPos = enemyPos;
     }
 
+    // EFFECTS: Returns the hp of the enemy.
     public int getHp() {
         return hp;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Minus the hp by the specified integer.
     public void minusHp(Integer integer) {
         hp = hp - integer;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the hp of the character to the specified integer.
     public void setHp(Integer integer) {
         hp = integer;
     }
@@ -51,6 +56,7 @@ public class Enemy {
         }
     }*/
 
+    // EFFECTS: Gets the enemy hit box.
     public Rectangle getHitBox(Integer width, Integer height) {
         return new Rectangle(enemyPos.getPosX(), enemyPos.getPosY(), width, height);
     }

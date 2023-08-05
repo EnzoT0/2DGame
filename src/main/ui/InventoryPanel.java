@@ -13,6 +13,8 @@ import java.util.Random;
 // Some parts of the code is inspired from the PlayDrawingTool class in the DrawingPlayer project (setImageItemPanel):
 // https://github.students.cs.ubc.ca/CPSC210/SimpleDrawingPlayer-Complete/blob/main/src/ui/tools/PlayDrawingTool.java
 
+// Inventory panel of the game.
+
 public class InventoryPanel extends JFrame {
     private TerminalGame terminalGame;
     private Inventory inventory;
@@ -25,7 +27,8 @@ public class InventoryPanel extends JFrame {
     private JPanel itemPanel;
     private JLabel notification;
 
-    // Pain
+    // EFFECTS: Constructs the inventory panel with the given parameters. Adds whatever treasure the
+    // user currently has as a button and image.
     public InventoryPanel(TerminalGame terminalGame, Inventory inventory) {
         this.terminalGame = terminalGame;
         this.inventory = inventory;
@@ -60,7 +63,8 @@ public class InventoryPanel extends JFrame {
 
     }
 
-    //
+    // MODIFIES: this
+    // EFFECTS: Sets the image and button of the treasure and puts them inside a panel.
     public void setImageItemPanel() {
         createCoin();
         List<Treasure> treasures = inventory.getTreasures();
@@ -88,6 +92,8 @@ public class InventoryPanel extends JFrame {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Creates the coin image and sets the image to the panel.
     public void createCoin() {
         coinPanel = new JPanel(new BorderLayout());
         ImageIcon coinImageIcon = new ImageIcon("./data/coin.png");

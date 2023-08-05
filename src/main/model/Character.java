@@ -27,6 +27,8 @@ public class Character {
         handleUserInput(keyHandler);
     }
 
+    // MODIFIES: this
+    // EFFECTS: Handles the user input, if character position is beyond the specified boundaries, then do nothing.
     public void handleUserInput(GameKeyHandler keyHandler) {
         if (keyHandler.isUpPressed() == true) {
             if (characterPos.getPosY() > 55) {
@@ -53,6 +55,7 @@ public class Character {
         }
     }
 
+    // EFFECTS: Returns true if character has collided with the specified position.
     public boolean hasCollided(Position pos) {
         double approx = 20;
         double distance = Math.sqrt(Math.pow(characterPos.getPosX() - pos.getPosX(), 2)
@@ -60,7 +63,6 @@ public class Character {
         return distance < approx;
     }
 
-    // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0.
     // MODIFIES: this
     // EFFECTS: Checks whether character is colliding with something, namely the enemy.
     // If so, subtract 5 from current hp.
@@ -70,10 +72,13 @@ public class Character {
         }
     }
 
+    // EFFECTS: Returns the attack of the character
     public int getAtk() {
         return atk;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the attack of the character.
     public void setAtk(Integer integer) {
         atk = integer;
     }
@@ -83,7 +88,7 @@ public class Character {
         return characterPos;
     }
 
-    // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0.
+    // REQUIRES: 570 >= x >= 0 and 535 >= y >= 55.
     // MODIFIES: this
     // EFFECTS: Sets character position to inputted position.
     public void setCharacterPos(Position pos) {

@@ -120,6 +120,10 @@ public class Game {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: If nextLevelBoss is true, then check whether there is a boss, if not, then add the boss
+    // and set do the boss methods. If boss is empty and if boss hp is less than 0, then clear the list
+    // and clear the projectile list as well. Set nextLevelBoss to false.
     public void checkNextLevel() {
         if (nextLevelBoss) {
 
@@ -138,6 +142,10 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: If hitByProjectile and not on cooldown, then change character hp, set cooldown to true and set
+    // the lastHit to current time. If not, then see if cooldown has ended and if so, then set
+    // hitByProjectile to false and onCooldown to false as well.
     public void checkCooldownHit() {
         long currentTime = System.currentTimeMillis();
         if (hitByProjectile && !onCooldown) {
@@ -151,6 +159,9 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: if boss isn't empty, then make boss shoot projectiles, move it, and update the boss
+    // while checking if the projectiles hit the boss or the character.
     public void ifBoss() {
         if (!boss.isEmpty()) {
             bossFire();
@@ -160,7 +171,9 @@ public class Game {
         }
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: checks if character is in the spot of the tile and if nextLevelBoss is false. If so, then add
+    // 5 new Enemies while clearing all the boss functions.
     public void checkEnemy() {
         if (character.getCharacterPos().getPosX() < 610 && (character.getCharacterPos().getPosX() + 20) > 585
                 && character.getCharacterPos().getPosY() < 370
@@ -177,6 +190,9 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Checks if character is in that specified position and if nextLevelBoss is true and also
+    // whether there are no more enemies. If so, then adds boss enemy.
     public void checkBoss() {
         if (character.getCharacterPos().getPosX() < 610 && (character.getCharacterPos().getPosX() + 20) > 585
                 && character.getCharacterPos().getPosY() < 370 && (character.getCharacterPos().getPosY() + 20) > 270
@@ -186,6 +202,8 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Updates the boss movement if not on cooldown.
     public void bossUpdate() {
         long currentTime = System.currentTimeMillis();
         long elapsedTimeSinceLastUpdate = currentTime - lastEnemyUpdateTime;
@@ -212,6 +230,8 @@ public class Game {
         }
     }
 
+    // MODIFIES: character, enemy
+    // EFFECTS: checks whether boss has collided with the character, if so, then minus character hp by 5.
     public void checkBossCollision(Enemy enemy) {
         Rectangle charRect = new Rectangle(character.getCharacterPos().getPosX(),
                 character.getCharacterPos().getPosY(), 36, 36);
@@ -220,6 +240,8 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: If not on cooldown, shoot a projectile from a random spot of the boss. Reset cooldown.
     public void bossFire() {
         long currentTime = System.currentTimeMillis();
         Random rand = new Random();
@@ -231,6 +253,8 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Check whether boss has more than 1 size. If not, then add a new boss with the specified parameters.
     public void seeWhichEnemy() {
         if (boss.size() == 0) {
             Position bossPos = new Position(375, 200);
@@ -240,12 +264,17 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: moves the projectiles to a new position.
     public void moveBossProjectile() {
         for (Projectile projectile : bossProjectiles) {
             projectile.moveBossPos();
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: checks if character was hit by the boss and whether boss has been hit by projectiles.
+    // if boss hp <= 0, then remove boss from list.
     public void checkBossProjectiles() {
         List<Projectile> badProjectiles = new ArrayList<>();
         List<Enemy> badEnemies = new ArrayList<>();
@@ -264,6 +293,8 @@ public class Game {
         projectiles.removeAll(badProjectiles);
     }
 
+    // MODIFIES: this
+    // EFFECTS: checks whether boss has been hit by a projectile, if so, then minus boss hp.
     public boolean checkBossHit(Enemy enemy, List<Projectile> badProjectiles) {
         for (Projectile projectile : projectiles) {
 /*            if (enemy.hasCollided(projectile.getPos(), 150)) {
@@ -282,6 +313,9 @@ public class Game {
         return false;
     }
 
+    // MODIFIES: this
+    // EFFECTS: checks whether character has been hit by boss projectiles. If so, then set hitByProjectile to true
+    // and return true. Removes boss projectiles from list.
     public boolean checkCharHit(Character character, List<Projectile> badProjectiles) {
         for (Projectile projectile : bossProjectiles) {
             if (character.hasCollided(projectile.getPos())) {
@@ -293,11 +327,8 @@ public class Game {
         return false;
     }
 
-
-
-
-
-    // ADDED, need TESTS
+    // MODIFIES: this
+    // EFFECTS: checks whether key: "f" has been pressed, if so, checks if cooldown is on or off, if not, then shoot.
     public void checkFire() {
         if (keyHandler.isFirePressed()) {
             long currentTime = System.currentTimeMillis();
@@ -309,6 +340,8 @@ public class Game {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Updates the enemy position if it is not on cooldown.
     public void enemyUpdate() {
         long currentTime = System.currentTimeMillis();
         long elapsedTimeSinceLastUpdate = currentTime - lastEnemyUpdateTime;
@@ -334,15 +367,13 @@ public class Game {
         }
     }
 
-    // ADDED, need TESTS
+    // MODIFIES: this
+    // EFFECTS: moves the projectile to a new position.
     public void moveProjectile() {
         for (Projectile projectile : projectiles) {
             projectile.movePos();
         }
     }
-
-
-
 
     // MODIFIES: this
     // EFFECTS: Spawns a new coin into a valid position in the game.
@@ -377,7 +408,8 @@ public class Game {
         return pos;
     }
 
-    // ADDED, need TESTS
+    // MODIFIES: this
+    // EFFECTS: Checks whether boss and regular projectiles are out of bounds, if so, then remove from the list.
     public void checkProjectiles() {
         List<Projectile> removeProjectileList = new ArrayList<>();
 
@@ -397,7 +429,8 @@ public class Game {
         bossProjectiles.removeAll(removeProjectileList);
     }
 
-    // ADDED, need TESTS
+    // MODIFIES: this
+    // EFFECTS: checks if enemy has been hit by projectile, and whether its hp is 0. If so, remove from enemy list.
     public void checkEnemyFire() {
         List<Projectile> badProjectiles = new ArrayList<>();
         List<Enemy> badEnemies = new ArrayList<>();
@@ -413,7 +446,7 @@ public class Game {
         enemies.removeAll(badEnemies);
     }
 
-    // ADDED, need TESTS
+    // EFFECTS: Checks whether enemy has been hit by user projectiles. If so, return true, else return false.
     public boolean checkHit(Enemy enemy, List<Projectile> badProjectiles) {
         for (Projectile projectile : projectiles) {
             Rectangle projRect = new Rectangle(projectile.getPos().getPosX(), projectile.getPos().getPosY(),
@@ -456,7 +489,7 @@ public class Game {
             return;
         }
         treasures.remove(checkTreasures);
-        inventory.addTreasure(new Treasure(treasure.whatTreasure()));
+        inventory.addSilentTreasure(new Treasure(treasure.whatTreasure()));
         checkTreasurePos = checkTreasures;
     }
 
@@ -611,72 +644,96 @@ public class Game {
         return checkTreasurePos;
     }
 
+    // EFFECTS: Returns the last enemy update time.
     public long getLastEnemyUpdateTime() {
         return lastEnemyUpdateTime;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the last enemy update time to the specified long unit.
     public void setLastEnemyUpdateTime(long c) {
         lastEnemyUpdateTime = c;
     }
 
-    // ADDED, need Tests
+    // EFFECTS: Gets the user's projectiles list
     public List<Projectile> getProjectiles() {
         return projectiles;
     }
 
-    // ADDED, need TESTS
+    // MODIFIES: this
+    // EFFECTS: Sets the user's projectile list to the speicfied list.
     public void setProjectiles(List<Projectile> projectiles) {
         this.projectiles = projectiles;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the lastFired to the long unit.
     public void setLastFired(Long e) {
         lastFired = e;
     }
 
+    // EFFECTS: Returns the interval.
     public long getInterval() {
         return interval;
     }
 
+    // EFFECTS: Returns the boss list.
     public List<Enemy> getBoss() {
         return boss;
     }
 
+    // EFFECTS: Returns the boss's list of projectiles.
     public List<Projectile> getBossProjectiles() {
         return bossProjectiles;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the nextLevelBoss to the specified boolean.
     public void setNextLevelBoss(Boolean bool) {
         nextLevelBoss = bool;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the boss list to the specified list.
     public void setBoss(List<Enemy> bossEnemy) {
         boss = bossEnemy;
     }
 
+    // EFFECTS: Returns the nextLevelBoss.
     public boolean getNextLevelBoss() {
         return nextLevelBoss;
     }
 
+    // EFFECTS: Returns whether hitByProjectile is true or false;
     public boolean gethitByProjectile() {
         return hitByProjectile;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the boolean to a specified boolean.
     public void setHitByProjectile(Boolean b) {
         hitByProjectile = b;
     }
 
+    // EFFECTS: Returns whether onCooldown is true or false.
     public boolean getOnCooldown() {
         return onCooldown;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the boss projectile list to the specified list.
     public void setBossProjectiles(List<Projectile> projectiles) {
         bossProjectiles = projectiles;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the lastEnemyFired to a specified long unit.
     public void setEnemyLastFired(Long e) {
         enemyLastFired = e;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the cooldown to the given boolean.
     public void setOnCooldown(Boolean b) {
         onCooldown = b;
     }

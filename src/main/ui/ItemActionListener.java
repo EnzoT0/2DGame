@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+// ActionListener class for the items.
+
 public class ItemActionListener implements ActionListener {
 
     private Treasure treasure;
@@ -28,6 +30,7 @@ public class ItemActionListener implements ActionListener {
 
     Timer buttonCooldown = new Timer(1500, e -> useTreasure.setEnabled(true));
 
+    // EFFECTS: Adds an actionListener to the item.
     public ItemActionListener(Treasure treasure, JLabel imgLabel, JButton useTreasure, JPanel itemPanel,
                               JPanel listOfItemsPanel, TerminalGame terminalGame, InventoryPanel inventoryPanel) {
         this.treasure = treasure;
@@ -68,7 +71,7 @@ public class ItemActionListener implements ActionListener {
         buttonCooldown.start();
     }
 
-
+    // EFFECTS: Checks what type of treasure it is, do whatever method it is.
     public void checkWhatTreasureDo(Treasure treasure) {
         if (treasure.getName().equals("Bomb")) {
             doBomb();
@@ -91,6 +94,9 @@ public class ItemActionListener implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: If bomb size is 0, then does the specified text, also does the specified text if
+    // bomb size is more than 0. Adds that text to a JLabel and sets the top-level JLabel to said one.
     public void doBomb() {
         if (terminalGame.getGame().getEnemies().size() == 0) {
             JLabel notification = new JLabel();
@@ -106,6 +112,8 @@ public class ItemActionListener implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Adds character attack by 2 and adds a text to a JLabel and sets the top-level JLabel to said one.
     public void doSword() {
         terminalGame.getGame().getCharacter().setAtk(terminalGame.getGame().getCharacter().getAtk() + 2);
         JLabel notification = new JLabel();
@@ -116,6 +124,8 @@ public class ItemActionListener implements ActionListener {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: Adds character attack by 1 and adds a text to a JLabel and sets the top-level JLabel to said one.
     public void doTwig() {
         terminalGame.getGame().getCharacter().setAtk(terminalGame.getGame().getCharacter().getAtk() + 1);
         JLabel notification = new JLabel();
@@ -125,6 +135,8 @@ public class ItemActionListener implements ActionListener {
         this.notification = notification;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Heals the character hp by 20 and adds a text to a JLabel and sets the top-level JLabel to said one.
     public void doHealthPot() {
         if (terminalGame.getGame().getCharacter().getHp() >= 80) {
             terminalGame.getGame().getCharacter().setHp(100);
@@ -139,6 +151,7 @@ public class ItemActionListener implements ActionListener {
         this.notification = notification;
     }
 
+    // EFFECTS: Checks which method it will go to.
     public void doMeat() {
         Random rand = new Random();
         int randNum = rand.nextInt(2);
@@ -149,6 +162,9 @@ public class ItemActionListener implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Poison the character, so user loses 10 hp.
+    // Adds a text to a JLabel and sets the top-level JLabel to said one.
     public void doUnluckyMeat() {
         terminalGame.getGame().getCharacter().setHp(terminalGame.getGame().getCharacter().getHp() - 10);
         JLabel notification = new JLabel();
@@ -159,6 +175,9 @@ public class ItemActionListener implements ActionListener {
         this.notification = notification;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Heals the character by 10 hp.
+    // Adds a text to a JLabel and sets the top-level JLabel to said one.
     public void doLuckyMeat() {
         if (terminalGame.getGame().getCharacter().getHp() >= 90) {
             terminalGame.getGame().getCharacter().setHp(100);

@@ -46,3 +46,11 @@ Constructing a 2D game in Java is of interest to myself due to several reasons.
 - As a user, I want to add a health potion to my character's inventory, enabling me to heal my character's HP (health points).
 - As a user, I want to add a new location to the list of locations available for the player-controlled character to travel to.
 - As a user, I want a shop or tavern system that can be used to trade in the currency that the player currently has for items.
+
+### Instructions for Grader:
+
+- You can generate the first required action related to adding Xs to Y by clicking on the button, Inventory, on the right side of the game screen. This shows all the items that you currently have collected.
+- You can generate the second required action related to adding Xs to Y by clicking first clicking on the Inventory button. There, you can click more buttons to use the items that you currently have. It disappears once you have used all the remaining quantity.
+- You can locate my visual component by clicking on the inventory button, where each item you collect displays a picture related to said item. There are more just from the drawing portion of the game as well such as enemy and user projectiles.
+- You can save the state of my application by pressing on the save button on the right hand of the game screen.
+- You can reload the state of my application to a saved game file by pressing the load button on the right hand of the game screen. 

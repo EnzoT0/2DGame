@@ -56,42 +56,57 @@ public class GameKeyHandler implements KeyListener {
         }
     }
 
+    // EFFECTS: Returns whether downPressed is true or false.
     public boolean isDownPressed() {
         return downPressed;
     }
 
+    // EFFECTS: Returns whether isUpPressed is true or false.
     public boolean isUpPressed() {
         return upPressed;
     }
 
+    // EFFECTS: Returns whether isLeftPressed is true or false.
     public boolean isLeftPressed() {
         return leftPressed;
     }
 
+    // EFFECTS: Returns whether isRightPressed is true or false.
     public boolean isRightPressed() {
         return rightPressed;
     }
 
+    // EFFECTS: Returns whether isFirePressed is true or false.
     public boolean isFirePressed() {
         return firePressed;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the setUpPressed to the specified boolean.
     public void setUpPressed(Boolean bool) {
         upPressed = bool;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the setDownPressed to the specified boolean.
     public void setDownPressed(Boolean bool) {
         downPressed = bool;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the setLeftPressed to the specified boolean.
     public void setLeftPressed(Boolean bool) {
         leftPressed = bool;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the setRightPressed to the specified boolean.
     public  void setRightPressed(Boolean bool) {
         rightPressed = bool;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the setFirePressed to the specified boolean.
     public void setFirePressed(Boolean bool) {
         firePressed = bool;
     }

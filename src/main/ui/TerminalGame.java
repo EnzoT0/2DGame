@@ -46,6 +46,7 @@ public class TerminalGame extends JPanel {
     private boolean isPaused = false;
 
 
+    // EFFECTS: Constructs the game screen
     public TerminalGame() {
         setPreferredSize(new Dimension(screenWidth, screenHeight));
 
@@ -59,6 +60,7 @@ public class TerminalGame extends JPanel {
         setFocusable(true);
     }
 
+    // EFFECTS: Starts the game.
     public void startGame() {
 
         //game = new Game(keyHandler);
@@ -76,6 +78,7 @@ public class TerminalGame extends JPanel {
         updateTimer();
     }
 
+    // EFFECTS: initializes a timer that updates and repaints the game by 10 milliseconds.
     // Note: Code referenced from M02-SpaceInvadersBase
     public void updateTimer() {
         Timer timer = new Timer(10, new ActionListener() {
@@ -91,6 +94,9 @@ public class TerminalGame extends JPanel {
         timer.start();
     }
 
+    // MODIFIES: game
+    // EFFECTS: updates all the game elements, including the character, enemy, projectile, etc.
+    // Checks if a boss is on screen as well.
     private void update() {
         game.update();
         game.enemyUpdate();
@@ -101,7 +107,7 @@ public class TerminalGame extends JPanel {
         }
     }
 
-
+    @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
@@ -113,6 +119,9 @@ public class TerminalGame extends JPanel {
         drawCoin(g);
         drawTreasures(g);
         drawTile(g);
+        if (game.getEnemies().isEmpty() && game.getBoss().isEmpty()) {
+            drawYellowTile(g);
+        }
         drawBoss(g);
         drawProjectile(g);
 
@@ -131,11 +140,21 @@ public class TerminalGame extends JPanel {
 
     }
 
+    // MODIFIES: g
+    // EFFECTS: draws the blue tile to the far end of the screen
     public void drawTile(Graphics2D g) {
-
         g.fillRect(585, 270, 25, 100);
     }
 
+    // MODIFIES: g
+    // EFFECTS: draws the yellow tile to the far end of the screen
+    public void drawYellowTile(Graphics2D g) {
+        g.setColor(Color.yellow);
+        g.fillRect(585, 270, 25, 100);
+    }
+
+    // MODIFIES: g
+    // EFFECTS: draws the boss onto the screen.
     public void drawBoss(Graphics2D g) {
         for (Enemy boss : game.getBoss()) {
             g.setColor(Color.RED);
@@ -143,6 +162,8 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // MODIFIES: g
+    // EFFECTS: draws the boss's projectiles onto the screen.
     public void drawBossProjectiles(Graphics2D g) {
         for (Projectile bossProjectile : game.getBossProjectiles()) {
             g.setColor(Color.WHITE);
@@ -151,6 +172,8 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // EFFECTS: Adds another key listener into the game, when one presses escape, it pauses the game.
+    // When game is over, press e to leave game.
     public void addMultiPurposeCheck() {
         addKeyListener(new KeyListener() {
             @Override
@@ -175,6 +198,8 @@ public class TerminalGame extends JPanel {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: Pauses the game if it isn't paused and vice versa.
     public void checkState() {
         if (isPaused) {
             isPaused = false;
@@ -183,6 +208,8 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // MODIFIES: g
+    // EFFECTS: Draws the end screen onto the game.
     public void drawEndScreen(Graphics2D g) {
         List<Enemy> noEnemy = new ArrayList<>();
         game.setEnemies(noEnemy);
@@ -201,9 +228,6 @@ public class TerminalGame extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(585, 270, 25, 100);
 
-
-        // can set character position to who knows where as well LOL.
-
         g.setColor(Color.white);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         String gameOverText = "Game Over";
@@ -214,6 +238,8 @@ public class TerminalGame extends JPanel {
         g.drawString(exitGame, (getWidth() - width2) / 2, getHeight() / 2 + 50);
     }
 
+    // MODIFIES: g
+    // EFFECTS: Draws the user's projectiles onto the game.
     public void drawProjectile(Graphics2D g) {
         for (Projectile projectile : game.getProjectiles()) {
             g.setColor(Color.WHITE);
@@ -222,13 +248,16 @@ public class TerminalGame extends JPanel {
         }
     }
 
-
+    // MODIFIES: g
+    // EFFECTS: Draws the character onto the game
     public void drawCharacter(Graphics2D g) {
         g.setColor(Color.white);
         g.fillRect(game.getCharacter().getCharacterPos().getPosX(),
                 game.getCharacter().getCharacterPos().getPosY(), tileSize, tileSize);
     }
 
+    // MODIFIES: this
+    // EFFECTS: Draws the enemies onto the game.
     public void drawEnemy(Graphics2D g) {
         for (Enemy enemy : game.getEnemies()) {
             g.setColor(Color.red);
@@ -237,27 +266,27 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // MODIFIES: g
+    // EFFECTS: Draws the enemy boss bar if there is a boss onto the game.
     public void drawBossEnemyBar(Graphics2D g) {
         int barWidthEnemy = 250;
         int barHeightEnemy = 30;
         int barXEnemy = 350;
         int barYEnemy = 10;
 
-        // background of hp
         g.setColor(Color.GRAY);
         g.fillRect(barXEnemy, barYEnemy, barWidthEnemy, barHeightEnemy);
 
-        // Percentage of hp
         double percentageEnemy = (double) currentEnemyHP / maxEnemyHP;
 
-        // width of part of the bar based on the percentage
         int coloredWidthEnemy = (int) (barWidthEnemy * percentageEnemy);
 
-        // green part of HP
         g.setColor(Color.RED);
         g.fillRect(barXEnemy, barYEnemy, coloredWidthEnemy, barHeightEnemy);
     }
 
+    // MODIFIES: g
+    // EFFECTS: Draws the coin onto the game.
     public void drawCoin(Graphics2D g) {
         for (Position coin : game.getCoin()) {
             g.setColor(Color.yellow);
@@ -265,6 +294,8 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // MODIFIES: g
+    // EFFECTS: Draws the treasure onto the game.
     public void drawTreasures(Graphics2D g) {
         for (Position treasure : game.getTreasures()) {
             g.setColor(Color.BLUE);
@@ -272,6 +303,8 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // MODIFIES: g
+    // EFFECTS: Draws the top part of the screen onto the game.
     public void drawTopBar(Graphics2D g) {
         g.setColor(Color.lightGray);
         g.fillRect(0, 0, 720, 50);
@@ -282,23 +315,18 @@ public class TerminalGame extends JPanel {
         g.setColor(Color.RED);
         g.drawString("ATK: " + game.getCharacter().getAtk(), 375, 30);*/
 
-        // Draw the HP bar here, similar to the previous HPBarExample's paint method
         int barWidth = 250;
         int barHeight = 30;
         int barX = 15;
         int barY = 10;
 
-        // background of hp
         g.setColor(Color.GRAY);
         g.fillRect(barX, barY, barWidth, barHeight);
 
-        // Percentage of hp
         double percentage = (double) currentHP / maxHP;
 
-        // width of part of the bar based on the percentage
         int coloredWidth = (int) (barWidth * percentage);
 
-        // green part of HP
         g.setColor(Color.GREEN);
         g.fillRect(barX, barY, coloredWidth, barHeight);
 
@@ -317,6 +345,8 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // MODIFIES: game
+    // EFFECTS: Loads a saved version of the game
     public void loadGame() {
         try {
             game = jsonReader.loadGame(keyHandler);
@@ -325,17 +355,15 @@ public class TerminalGame extends JPanel {
         }
     }
 
+    // EFFECTS: Return the game.
     public Game getGame() {
         return game;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets whether the game is paused or not to the specified boolean.
     public void setPaused(Boolean b) {
         isPaused = b;
     }
-
-    public boolean isPaused() {
-        return isPaused;
-    }
-
 
 }
