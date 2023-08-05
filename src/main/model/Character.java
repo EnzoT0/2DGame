@@ -60,7 +60,6 @@ public class Character {
         return distance < approx;
     }
 
-
     // REQUIRES: 39 >= x >= 0 and 21 >= y >= 0.
     // MODIFIES: this
     // EFFECTS: Checks whether character is colliding with something, namely the enemy.

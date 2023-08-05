@@ -78,7 +78,6 @@ public class Game {
     public Game(GameKeyHandler keyHandler) {
         this.keyHandler = keyHandler;
         this.character = new Character();
-
         Position pos = generateRandomPosition();
         makeValidRandomPos(pos);
         coin.add(pos);
@@ -206,10 +205,18 @@ public class Game {
                 }
                 Position pos = new Position(newPosX, newPosY);
                 enemy.setEnemyPos(pos);
-                getCharacter().checkCollision(pos);
+                checkBossCollision(enemy);
                 lastEnemyUpdateTime = currentTime;
             }
 
+        }
+    }
+
+    public void checkBossCollision(Enemy enemy) {
+        Rectangle charRect = new Rectangle(character.getCharacterPos().getPosX(),
+                character.getCharacterPos().getPosY(), 36, 36);
+        if (charRect.intersects(enemy.getHitBox(150, 150))) {
+            getCharacter().changeHp();
         }
     }
 

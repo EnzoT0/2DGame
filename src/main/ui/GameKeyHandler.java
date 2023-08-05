@@ -12,11 +12,6 @@ public class GameKeyHandler implements KeyListener {
     private boolean rightPressed;
     private boolean firePressed;
 
-    private boolean upOnly;
-    private boolean downOnly;
-    private boolean leftOnly;
-    private boolean rightOnly;
-
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -27,7 +22,6 @@ public class GameKeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_W) {
             upPressed = true;
-            upOnly = true;
         }
         if (e.getKeyCode() == KeyEvent.VK_S) {
             downPressed = true;
@@ -80,10 +74,6 @@ public class GameKeyHandler implements KeyListener {
 
     public boolean isFirePressed() {
         return firePressed;
-    }
-
-    public boolean isUpOnly() {
-        return upOnly;
     }
 
     public void setUpPressed(Boolean bool) {

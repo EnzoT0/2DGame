@@ -569,6 +569,18 @@ public class GameTest {
     }
 
     @Test
+    void testcheckBossCollision() {
+        Enemy enemy = new Enemy(new Position(100, 100));
+        game.getCharacter().setCharacterPos(new Position(100, 100));
+        game.checkBossCollision(enemy);
+        assertEquals(95, game.getCharacter().getHp());
+
+        game.getCharacter().setCharacterPos(new Position(1000, 1000));
+        game.checkBossCollision(enemy);
+        assertEquals(95, game.getCharacter().getHp());
+    }
+
+    @Test
     void testCheckBossProjectiles() {
         EnemyList enemyList = new EnemyList();
 
