@@ -51,6 +51,7 @@ Constructing a 2D game in Java is of interest to myself due to several reasons.
 
 - You can generate the first required action related to adding Xs to Y by clicking on the button, Inventory, on the right side of the game screen. This shows all the items that you currently have collected.
 - You can generate the second required action related to adding Xs to Y by clicking first clicking on the Inventory button. There, you can click more buttons to use the items that you currently have. It disappears once you have used all the remaining quantity.
+- Another action related to adding Xs to Y, just not on the treasure and inventory section of the code this time, is by clicking the add an enemy button where it will add a new enemy class to the list of enemy class.
 - You can locate my visual component by clicking on the inventory button, where each item you collect displays a picture related to said item. There are more just from the drawing portion of the game as well such as enemy and user projectiles.
 - You can save the state of my application by pressing on the save button on the right hand of the game screen.
 - You can reload the state of my application to a saved game file by pressing the load button on the right hand of the game screen. 
