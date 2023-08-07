@@ -1226,4 +1226,17 @@ public class GameTest {
         game.setCoinAmount(2);
         assertEquals(2, game.getCoinAmount());
     }
+
+    @Test
+    void testRemoveAddOneEnemy() {
+        List<Enemy> enemyL = new ArrayList<>();
+        enemyL.add(new Enemy(new Position(1, 2)));
+        game.setEnemies(enemyL);
+        assertEquals(1, game.getEnemies().size());
+        game.removeOneEnemy();
+        assertEquals(0, game.getEnemies().size());
+
+        game.addOneEnemy();
+        assertEquals(1, game.getEnemies().size());
+    }
 }

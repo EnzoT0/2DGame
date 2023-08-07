@@ -367,6 +367,20 @@ public class Game {
         }
     }
 
+    // REQUIRES: enemies is not empty
+    // MODIFIES: this
+    // EFFECTS: Removes one enemy from the list.
+    public void removeOneEnemy() {
+        enemies.remove(enemies.size() - 1);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Adds one enemy to the enemy list.
+    public void addOneEnemy() {
+        EventLog.getInstance().logEvent(new Event("Added an enemy"));
+        enemies.add(new Enemy(generateRandomPosition()));
+    }
+
     // MODIFIES: this
     // EFFECTS: moves the projectile to a new position.
     public void moveProjectile() {
@@ -476,6 +490,7 @@ public class Game {
             return;
         }
         coin.remove(coinsEarned);
+        EventLog.getInstance().logEvent(new Event("Added a coin."));
         coinAmount++;
         checkCoinPos = coinsEarned;
     }
@@ -489,7 +504,10 @@ public class Game {
             return;
         }
         treasures.remove(checkTreasures);
-        inventory.addSilentTreasure(new Treasure(treasure.whatTreasure()));
+        Treasure treasure1 = new Treasure(treasure.whatTreasure());
+//        inventory.addSilentTreasure(new Treasure(treasure.whatTreasure()));
+        inventory.addSilentTreasure(treasure1);
+        EventLog.getInstance().logEvent(new Event("Added treasure: " + treasure1.getName()));
         checkTreasurePos = checkTreasures;
     }
 

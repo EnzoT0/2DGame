@@ -104,7 +104,8 @@ public class ItemActionListener implements ActionListener {
             notification.setFont(new Font("Arial", Font.BOLD, 15));
             this.notification = notification;
         } else {
-            terminalGame.getGame().getEnemies().remove(terminalGame.getGame().getEnemies().size() - 1);
+//            terminalGame.getGame().getEnemies().remove(terminalGame.getGame().getEnemies().size() - 1);
+            terminalGame.getGame().removeOneEnemy();
             JLabel notification = new JLabel();
             notification.setText("One enemy has been obliterated. Quantity remaining: " + treasure.getQuantity());
             notification.setFont(new Font("Arial", Font.BOLD, 15));

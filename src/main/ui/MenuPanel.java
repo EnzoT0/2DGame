@@ -86,8 +86,9 @@ public class MenuPanel extends JPanel {
 
     // EFFECTS: Adds an enemy to the list of enemies. If game ended, then do not do anything.
     public void enemyAdd() {
-        Position pos = terminalGame.getGame().generateRandomPosition();
-        terminalGame.getGame().getEnemies().add(new Enemy(pos));
+//        Position pos = terminalGame.getGame().generateRandomPosition();
+//        terminalGame.getGame().getEnemies().add(new Enemy(pos));
+        terminalGame.getGame().addOneEnemy();
         terminalGame.requestFocusInWindow();
     }
 

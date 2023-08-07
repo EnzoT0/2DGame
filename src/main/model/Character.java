@@ -80,6 +80,7 @@ public class Character {
     // MODIFIES: this
     // EFFECTS: Sets the attack of the character.
     public void setAtk(Integer integer) {
+        EventLog.getInstance().logEvent(new Event("Character has increased their attack to " + integer));
         atk = integer;
     }
 
@@ -115,6 +116,7 @@ public class Character {
     // MODIFIES: this
     // EFFECTS: Sets the character hp to inputted value.
     public void setHp(int hp) {
+        EventLog.getInstance().logEvent(new Event("Character's hp has changed to " + hp));
         this.hp = hp;
     }
 

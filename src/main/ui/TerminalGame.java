@@ -2,6 +2,7 @@ package ui;
 
 import model.*;
 import model.EnemyList;
+import model.Event;
 import org.w3c.dom.css.Rect;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -183,6 +184,10 @@ public class TerminalGame extends JPanel {
                 }
                 if (e.getKeyCode() == KeyEvent.VK_E) {
                     if (game.isEnded()) {
+                        EventLog el = EventLog.getInstance();
+                        for (Event next : el) {
+                            System.out.println(next.getDate() + " " + next.getDescription());
+                        }
                         System.exit(0);
                     }
                 }
