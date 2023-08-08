@@ -55,3 +55,33 @@ Constructing a 2D game in Java is of interest to myself due to several reasons.
 - You can locate my visual component by clicking on the inventory button, where each item you collect displays a picture related to said item. There are more just from the drawing portion of the game as well such as enemy and user projectiles.
 - You can save the state of my application by pressing on the save button on the right hand of the game screen.
 - You can reload the state of my application to a saved game file by pressing the load button on the right hand of the game screen. 
+
+### Phase 4: Task 2
+
+Representative sample of the events that occur:
+
+Mon Aug 07 23:02:29 PDT 2023 Added treasure: Sword
+
+Mon Aug 07 23:02:35 PDT 2023 Added treasure: Health Pot
+
+Mon Aug 07 23:02:43 PDT 2023 Added treasure: Meat
+
+Mon Aug 07 23:02:46 PDT 2023 Added treasure: Bomb
+
+Mon Aug 07 23:02:49 PDT 2023 Added a coin.
+
+Mon Aug 07 23:03:00 PDT 2023 Added treasure: Twig
+
+Mon Aug 07 23:03:05 PDT 2023 Character has increased their attack to 7
+
+Mon Aug 07 23:03:07 PDT 2023 Character's hp has changed to 100
+
+Mon Aug 07 23:03:08 PDT 2023 Character's hp has changed to 90
+
+Mon Aug 07 23:03:12 PDT 2023 Character has increased their attack to 8
+
+Mon Aug 07 23:03:17 PDT 2023 Added an enemy
+
+### Phase 4: Task 3
+
+If I had more time to work on the project, I would have refactored my game class and split the methods to more classes that have only one role because as of right now, my game class consists of the bulk of the code, consisting of different roles like adding an enemy, removing one, shooting, etc. I would split the code to its perspective class (or made a new one entirely) if I had more time. Another thing I would refactor if I had more time is abstracting some of my classes as some of them (eg. game and projectile for instance) have basically similar methods and I think that abstracting some parts of the code and using extending these classes to it is a great way to reduce the amount of code I have to keep copying. 

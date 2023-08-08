@@ -15,6 +15,13 @@ import java.util.Random;
 
 // Inventory panel of the game.
 
+// Inventory Image References:
+// Bomb: https://www.nicepng.com/downpng/u2q8o0u2a9e6o0a9_pixel-bomb-pixel-monster-gif/
+// Twig: https://pixelartmaker.com/art/0d354705c936ace
+// Health Pot: https://www.vhv.rs/viewpic/hbiJomi_pixel-potion-png-transparent-cute-ghost-png-png/
+// Meat: https://www.pixilart.com/draw/meat-9303f679e92050a
+// Coin: https://pixelartmaker.com/art/52ea0019957650a
+
 public class InventoryPanel extends JFrame {
     private TerminalGame terminalGame;
     private Inventory inventory;
